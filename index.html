@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sauze Labs | Strategic Advisory for Energy, Mining & Infrastructure in LATAM</title>
+  <meta name="description" content="We partner with companies and investors navigating complex energy, mining, and infrastructure projects across Latin America. 45+ years of combined expertise in banking, finance and energy.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================================
+       VARIABLES & RESET
+    ================================================================ */
+    :root {
+      --bg:        #FAFAF6;
+      --bg-sage:   #F0F3EB;
+      --bg-dark:   #2C3528;
+      --green:     #5B6B54;
+      --green-h:   #4A5A44;
+      --green-vl:  #E8ECE3;
+      --text:      #1C1C1C;
+      --text-2:    #6B6B6B;
+      --text-3:    #999999;
+      --border:    #E5E5E0;
+      --white:     #FFFFFF;
+      --nav-h:     72px;
+      --mw:        1140px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3 { font-family: 'Merriweather', Georgia, serif; line-height: 1.2; font-weight: 700; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ================================================================
+       LAYOUT
+    ================================================================ */
+    .wrap { max-width: var(--mw); margin: 0 auto; padding: 0 32px; }
+    .sect { padding: 100px 0; }
+
+    .label {
+      display: block;
+      font-size: 11px; font-weight: 600; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--text-3); margin-bottom: 14px;
+    }
+    .sect-h {
+      font-size: clamp(28px, 4vw, 44px); font-weight: 700;
+      margin-bottom: 20px; max-width: 620px;
+    }
+    .sect-sub {
+      font-size: 17px; color: var(--text-2); max-width: 520px; line-height: 1.75;
+    }
+
+    /* ================================================================
+       BUTTONS
+    ================================================================ */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 100px;
+      font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif;
+      cursor: pointer; transition: all .2s; border: 1.5px solid transparent;
+    }
+    .btn-p {
+      background: var(--green); color: #fff; border-color: var(--green);
+    }
+    .btn-p:hover {
+      background: var(--green-h); border-color: var(--green-h);
+    }
+    .btn-g {
+      background: transparent; color: var(--text); border-color: var(--border);
+    }
+    .btn-g:hover { border-color: var(--text-3); }
+    .btn-arrow::after {
+      content: ''; display: inline-block; width: 14px; height: 14px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 8h10M9 4l4 4-4 4'/%3E%3C/svg%3E") no-repeat center/contain;
+    }
+    .btn-g .btn-arrow-dark::after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%231C1C1C' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 8h10M9 4l4 4-4 4'/%3E%3C/svg%3E");
+    }
+
+    /* ================================================================
+       NAVIGATION
+    ================================================================ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-h); display: flex; align-items: center;
+      background: rgba(250,250,246,.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav .wrap {
+      max-width: none;
+      width: 80%;
+    }
+    .nav-inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      width: 100%;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 17px; font-weight: 600; color: var(--text);
+      justify-self: start;
+    }
+    .nav-logo svg { flex-shrink: 0; }
+    .nav-center { display: flex; gap: 32px; justify-self: center; }
+    .nav-center a {
+      font-size: 14px; color: var(--text-2);
+      transition: color .2s; position: relative;
+    }
+    .nav-center a:hover { color: var(--text); }
+    .nav-cta { justify-self: end; }
+    .nav-cta .btn { padding: 9px 18px; font-size: 13px; }
+
+    .hamburger {
+      display: none; background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 20px; height: 2px;
+      background: var(--text); margin: 4px 0; border-radius: 1px;
+    }
+    .mob-nav {
+      display: none; position: fixed; top: var(--nav-h); left: 0; right: 0;
+      background: rgba(250,250,246,.97); backdrop-filter: blur(12px);
+      padding: 24px 32px; border-bottom: 1px solid var(--border); z-index: 99;
+    }
+    .mob-nav.open { display: block; }
+    .mob-nav ul { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+    .mob-nav a { font-size: 16px; color: var(--text-2); }
+
+    /* ================================================================
+       HERO
+    ================================================================ */
+    .hero {
+      min-height: 100vh; padding-top: var(--nav-h);
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      background-image: url('pexels-volker-braun-2149703592-33122147.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(250,248,243,0.82) 0%,
+        rgba(250,248,243,0.60) 50%,
+        rgba(250,248,243,0.10) 100%
+      );
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 640px; padding: 60px 0 80px;
+    }
+    .hero-label {
+      display: inline-block;
+      font-size: 11px; font-weight: 600; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--green);
+      margin-bottom: 24px;
+    }
+    .hero-h1 {
+      font-size: clamp(36px, 5.5vw, 58px);
+      line-height: 1.08; margin-bottom: 24px;
+      color: var(--text);
+    }
+    .hero-h1 em { font-style: italic; }
+    .hero-p {
+      font-size: 17px; color: var(--text-2);
+      line-height: 1.75; margin-bottom: 36px; max-width: 480px;
+    }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 56px; }
+    .hero-logos {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding-top: 32px; border-top: 1px solid rgba(0,0,0,.1);
+    }
+    .hero-logos-label {
+      font-size: 12px; color: var(--text-3); font-weight: 500; margin-right: 8px;
+    }
+    .logo-pill {
+      font-size: 11px; font-weight: 600; letter-spacing: .04em;
+      padding: 5px 14px; border-radius: 100px;
+      background: rgba(255,255,255,.6); color: var(--text-2);
+      border: 1px solid rgba(0,0,0,.06);
+      backdrop-filter: blur(4px);
+    }
+
+    /* ================================================================
+       CASE STUDIES / SERVICES SECTION
+    ================================================================ */
+    .cases { background: var(--white); }
+    .cases-grid {
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 0; margin-top: 48px;
+      border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; min-height: 420px;
+    }
+    .cases-sidebar {
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+    }
+    .case-tab {
+      padding: 18px 24px; cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px; color: var(--text-2);
+      line-height: 1.5; transition: all .15s;
+      background: none; border-left: 3px solid transparent;
+      text-align: left; width: 100%; font-family: 'Inter', sans-serif;
+      border-right: none; border-top: none;
+    }
+    .case-tab:last-child { border-bottom: none; }
+    .case-tab:hover { background: var(--bg); color: var(--text); }
+    .case-tab.active {
+      background: var(--bg);
+      color: var(--text); font-weight: 500;
+      border-left-color: var(--green);
+    }
+    .case-detail { padding: 36px 40px; }
+    .case-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--green);
+      background: var(--green-vl);
+      padding: 4px 10px; border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .case-title {
+      font-size: 24px; font-weight: 700; line-height: 1.25;
+      margin-bottom: 20px;
+    }
+    .case-desc {
+      font-size: 15px; color: var(--text-2); line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .case-metrics { display: flex; flex-direction: column; gap: 10px; }
+    .case-metric {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--text);
+    }
+    .case-metric::before {
+      content: ''; flex-shrink: 0;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green); margin-top: 7px;
+    }
+    .case-detail-item { display: none; }
+    .case-detail-item.active { display: block; }
+
+    /* ================================================================
+       THE SAUZE DIFFERENCE / OUR APPROACH (STACK)
+    ================================================================ */
+    .stack-sect { background: var(--bg-sage); }
+    .stack-layout {
+      display: grid; grid-template-columns: 1fr 1.2fr;
+      gap: 80px; align-items: center; margin-top: 56px;
+    }
+    .stack-visual {
+      display: flex; flex-direction: column; gap: 0;
+      perspective: 600px;
+    }
+    .stack-layer {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 10px; padding: 18px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.04);
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: -6px; position: relative;
+      transition: transform .2s;
+    }
+    .stack-layer:nth-child(1) { z-index: 4; }
+    .stack-layer:nth-child(2) { z-index: 3; margin-left: 12px; margin-right: -12px; }
+    .stack-layer:nth-child(3) { z-index: 2; margin-left: 24px; margin-right: -24px; }
+    .stack-layer:nth-child(4) { z-index: 1; margin-left: 36px; margin-right: -36px; }
+    .stack-layer:hover { transform: translateY(-2px); }
+    .stack-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .stack-dot-1 { background: #5B6B54; }
+    .stack-dot-2 { background: #7B8F73; }
+    .stack-dot-3 { background: #A1B099; }
+    .stack-dot-4 { background: #C4CEBC; }
+    .stack-label { font-size: 13px; font-weight: 500; color: var(--text); }
+    .stack-sublabel { font-size: 11px; color: var(--text-3); margin-left: auto; }
+
+    .stack-descs { display: flex; flex-direction: column; gap: 28px; }
+    .stack-desc-item h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px; font-weight: 600; color: var(--text);
+      margin-bottom: 8px;
+    }
+    .stack-desc-item p {
+      font-size: 14px; color: var(--text-2); line-height: 1.7;
+    }
+    .stack-desc-tag {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--green);
+      margin-bottom: 6px;
+    }
+
+    /* ================================================================
+       WHY SAUZE LABS
+    ================================================================ */
+    .why-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 40px 56px; margin-top: 56px;
+    }
+    .why-item h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px; font-weight: 600; color: var(--text);
+      margin-bottom: 10px;
+    }
+    .why-item p {
+      font-size: 15px; color: var(--text-2); line-height: 1.75;
+    }
+
+    /* ================================================================
+       TEAM / PARTNERS
+    ================================================================ */
+    .team-list { margin-top: 48px; }
+    .team-row {
+      display: grid; grid-template-columns: 160px 1fr;
+      gap: 40px; align-items: start;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .team-row:first-child { border-top: 1px solid var(--border); }
+
+    .team-photo {
+      width: 140px; height: 140px;
+      border-radius: 10px; overflow: hidden;
+      background: var(--bg-sage);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; font-weight: 700;
+      font-family: 'Merriweather', serif;
+      color: var(--green);
+      /* Replace with <img> for actual photos */
+      filter: grayscale(0);
+    }
+
+    .team-info {}
+    .team-name {
+      font-size: clamp(22px, 2.5vw, 28px); font-weight: 700;
+      margin-bottom: 4px; color: var(--text);
+    }
+    .team-role {
+      font-size: 14px; font-weight: 500; color: var(--green);
+      margin-bottom: 16px;
+    }
+    .team-bio {
+      font-size: 15px; color: var(--text-2); line-height: 1.75;
+      max-width: 600px; margin-bottom: 14px;
+    }
+    .team-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 14px; font-weight: 500; color: var(--text);
+      transition: color .2s;
+    }
+    .team-link:hover { color: var(--green); }
+    .team-link svg { width: 12px; height: 12px; }
+
+    /* ================================================================
+       FAQ
+    ================================================================ */
+    .faq-list { margin-top: 48px; max-width: 720px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-q {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 22px 0; cursor: pointer;
+      font-size: 15px; font-weight: 500; color: var(--text);
+      background: none; border: none; width: 100%; text-align: left;
+      font-family: 'Inter', sans-serif; transition: color .2s;
+    }
+    .faq-q:hover { color: var(--green); }
+    .faq-ico {
+      flex-shrink: 0; width: 20px; height: 20px;
+      transition: transform .3s;
+    }
+    .faq-item.open .faq-ico { transform: rotate(45deg); }
+    .faq-a {
+      display: none; padding-bottom: 22px;
+      font-size: 15px; color: var(--text-2); line-height: 1.75;
+      max-width: 620px;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ================================================================
+       CTA SECTION
+    ================================================================ */
+    .cta-sect {
+      background: var(--bg-dark);
+      text-align: center;
+      padding: 100px 0;
+    }
+    .cta-sect .sect-h {
+      color: #fff; margin: 0 auto 16px; max-width: 540px;
+    }
+    .cta-sect .sect-h em { font-style: italic; color: #C4CEBC; }
+    .cta-sect .sect-sub {
+      color: rgba(255,255,255,.6); margin: 0 auto 36px;
+    }
+    .cta-sect .btn-p {
+      background: #fff; color: var(--bg-dark); border-color: #fff;
+    }
+    .cta-sect .btn-p:hover {
+      background: #E8ECE3; border-color: #E8ECE3;
+    }
+
+    /* ================================================================
+       FOOTER
+    ================================================================ */
+    .footer { padding: 48px 0; border-top: 1px solid var(--border); }
+    .footer-grid {
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 40px;
+    }
+    .footer-about {
+      font-size: 14px; color: var(--text-2); line-height: 1.65; margin-top: 14px;
+    }
+    .footer-col h5 {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--text-3); margin-bottom: 14px;
+    }
+    .footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+    .footer-col a { font-size: 14px; color: var(--text-2); transition: color .2s; }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 48px; padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px; color: var(--text-3);
+    }
+
+    /* ================================================================
+       SCROLL ANIMATIONS
+    ================================================================ */
+    .fu {
+      opacity: 0; transform: translateY(18px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .fu.vis { opacity: 1; transform: translateY(0); }
+
+    /* ================================================================
+       RESPONSIVE
+    ================================================================ */
+    @media (max-width: 960px) {
+      .cases-grid { grid-template-columns: 1fr; }
+      .cases-sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+      .stack-layout { grid-template-columns: 1fr; gap: 40px; }
+      .team-row { grid-template-columns: 100px 1fr; gap: 24px; }
+      .team-photo { width: 100px; height: 100px; font-size: 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+    @media (max-width: 768px) {
+      .nav-center, .nav-cta { display: none; }
+      .hamburger { display: block; }
+      .why-grid { grid-template-columns: 1fr; gap: 32px; }
+      .team-row { grid-template-columns: 1fr; }
+      .team-photo { width: 120px; height: 120px; }
+      .sect { padding: 72px 0; }
+      .hero-content { padding: 40px 0 60px; }
+      .footer-bottom { flex-direction: column; gap: 8px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ================================================================
+     NAVIGATION
+================================================================ -->
+<nav class="nav">
+  <div class="wrap">
+    <div class="nav-inner">
+
+      <a href="#" class="nav-logo">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#5B6B54" stroke-width="1.5"/>
+          <polygon points="14,7 21,11 21,19 14,23 7,19 7,11" fill="rgba(91,107,84,0.10)"/>
+          <circle cx="14" cy="14.5" r="3" fill="#5B6B54"/>
+        </svg>
+        Sauze Labs
+      </a>
+
+      <div class="nav-center">
+        <a href="#services">Case studies</a>
+        <a href="#why">Why Sauze Labs</a>
+        <a href="#faq">FAQ</a>
+      </div>
+
+      <div class="nav-cta">
+        <a href="#contact" class="btn btn-p btn-arrow" style="font-size:13px;padding:9px 18px;">Talk to our team</a>
+      </div>
+
+      <button class="hamburger" id="ham" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="mob-nav" id="mobNav">
+  <ul>
+    <li><a href="#services" onclick="closeNav()">Case studies</a></li>
+    <li><a href="#why" onclick="closeNav()">Why Sauze Labs</a></li>
+    <li><a href="#faq" onclick="closeNav()">FAQ</a></li>
+  </ul>
+  <a href="#contact" class="btn btn-p btn-arrow" style="width:100%;justify-content:center;" onclick="closeNav()">Talk to our team</a>
+</div>
+
+
+<!-- ================================================================
+     HERO
+================================================================ -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="wrap">
+    <div class="hero-content">
+
+      <span class="hero-label">Strategic Advisory</span>
+
+      <h1 class="hero-h1">Your partner for <em>energy, mining</em> and <em>infrastructure</em> deals in LATAM</h1>
+
+      <p class="hero-p">We work with companies and investors to navigate complex projects across Latin America&nbsp;&mdash; from bid to financial close and beyond.</p>
+
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-p btn-arrow">Book a working session</a>
+        <a href="#services" class="btn btn-g">See our work</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     CASE STUDIES / SERVICES
+================================================================ -->
+<section class="sect cases" id="services">
+  <div class="wrap">
+    <div class="sect-h fu">End-to-end advisory for complex deals</div>
+
+    <div class="cases-grid fu">
+      <!-- Sidebar tabs -->
+      <div class="cases-sidebar">
+        <button class="case-tab active" onclick="showCase(0,this)">Full bid process management for large-scale tenders</button>
+        <button class="case-tab" onclick="showCase(1,this)">Financial risk hedging across volatile LATAM markets</button>
+        <button class="case-tab" onclick="showCase(2,this)">Comprehensive risk frameworks for complex projects</button>
+        <button class="case-tab" onclick="showCase(3,this)">Macroeconomic research & country analysis</button>
+        <button class="case-tab" onclick="showCase(4,this)">LATAM market entry for international firms</button>
+        <button class="case-tab" onclick="showCase(5,this)">AI integration into deal & analysis workflows</button>
+      </div>
+
+      <!-- Detail panels -->
+      <div class="case-detail">
+
+        <div class="case-detail-item active" data-case="0">
+          <span class="case-tag">Bid Management</span>
+          <h3 class="case-title">Full bid process management for large-scale tenders</h3>
+          <p class="case-desc">Complete lifecycle support from pre-qualification to contract award. We structure your offer, coordinate technical and financial components, and build the narrative that wins competitive tenders in LATAM's energy, mining, and infrastructure sectors.</p>
+          <div class="case-metrics">
+            <div class="case-metric">End-to-end coordination from PQ to award</div>
+            <div class="case-metric">Projects spanning $50M to multi-billion dollar scale</div>
+            <div class="case-metric">Deep knowledge of LATAM tender processes and stakeholders</div>
+          </div>
+        </div>
+
+        <div class="case-detail-item" data-case="1">
+          <span class="case-tag">Financial Hedging</span>
+          <h3 class="case-title">Financial risk hedging across volatile LATAM markets</h3>
+          <p class="case-desc">Design and execution of hedging strategies for FX, interest rate, and commodity exposures. Our partners have traded these instruments on the desks of Citi and Deutsche Bank &mdash; we bring that precision to protect your project economics.</p>
+          <div class="case-metrics">
+            <div class="case-metric">Custom hedging strategies for FX, rates, and commodities</div>
+            <div class="case-metric">Built by former Wall Street EM traders</div>
+            <div class="case-metric">Structured to match project cash flow profiles</div>
+          </div>
+        </div>
+
+        <div class="case-detail-item" data-case="2">
+          <span class="case-tag">Risk Management</span>
+          <h3 class="case-title">Comprehensive risk frameworks for complex projects</h3>
+          <p class="case-desc">We build risk matrices spanning political, regulatory, operational, financial, and counterparty risk &mdash; tailored to LATAM's unique environment. Risks are not just identified but quantified, monitored, and systematically mitigated.</p>
+          <div class="case-metrics">
+            <div class="case-metric">Quantitative approach grounded in actuarial methods</div>
+            <div class="case-metric">Covers political, regulatory, operational and financial risks</div>
+            <div class="case-metric">Ongoing monitoring and adjustment frameworks</div>
+          </div>
+        </div>
+
+        <div class="case-detail-item" data-case="3">
+          <span class="case-tag">Macro Research</span>
+          <h3 class="case-title">Macroeconomic research &amp; country analysis</h3>
+          <p class="case-desc">Deep analysis of LATAM macro dynamics for investment decisions: inflation trajectories, currency regimes, sovereign risk, fiscal and monetary policy, and sectoral outlooks across Argentina, Brazil, Chile, Colombia, Peru, and beyond.</p>
+          <div class="case-metrics">
+            <div class="case-metric">Country-level macro models for investment screening</div>
+            <div class="case-metric">Real-time monitoring of policy and regulatory shifts</div>
+            <div class="case-metric">Scenario analysis for project stress-testing</div>
+          </div>
+        </div>
+
+        <div class="case-detail-item" data-case="4">
+          <span class="case-tag">Market Entry</span>
+          <h3 class="case-title">LATAM market entry for international firms</h3>
+          <p class="case-desc">Guiding first-time entrants through LATAM's complexity: regulatory navigation, local partner identification, competitive intelligence, stakeholder mapping, and on-the-ground relationship management. We help you avoid the pitfalls that cost time and capital.</p>
+          <div class="case-metrics">
+            <div class="case-metric">Regulatory and concession framework mapping</div>
+            <div class="case-metric">Local partner vetting and relationship building</div>
+            <div class="case-metric">Tailored go-to-market strategy per country</div>
+          </div>
+        </div>
+
+        <div class="case-detail-item" data-case="5">
+          <span class="case-tag">AI Integration</span>
+          <h3 class="case-title">AI integration into deal &amp; analysis workflows</h3>
+          <p class="case-desc">We embed AI tools into your deal screening, risk monitoring, and reporting pipelines. From automated data aggregation of LATAM regulatory filings to LLM-powered research and real-time risk dashboards &mdash; custom-built for your specific workflows.</p>
+          <div class="case-metrics">
+            <div class="case-metric">Custom AI pipelines for deal screening and due diligence</div>
+            <div class="case-metric">Automated regulatory and macro data aggregation</div>
+            <div class="case-metric">Built by engineers with AI hardware patents</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     THE SAUZE DIFFERENCE (STACK)
+================================================================ -->
+<section class="sect stack-sect" id="approach">
+  <div class="wrap">
+    <span class="label">Our Approach</span>
+    <div class="sect-h fu">The Sauze Difference</div>
+
+    <div class="stack-layout fu">
+
+      <!-- Stack visual -->
+      <div class="stack-visual">
+        <div class="stack-layer">
+          <div class="stack-dot stack-dot-1"></div>
+          <span class="stack-label">Client Interface</span>
+          <span class="stack-sublabel">Reports &amp; Dashboards</span>
+        </div>
+        <div class="stack-layer">
+          <div class="stack-dot stack-dot-2"></div>
+          <span class="stack-label">Deal Execution</span>
+          <span class="stack-sublabel">Bids &amp; Structuring</span>
+        </div>
+        <div class="stack-layer">
+          <div class="stack-dot stack-dot-3"></div>
+          <span class="stack-label">Risk &amp; Analytics</span>
+          <span class="stack-sublabel">Hedging &amp; Models</span>
+        </div>
+        <div class="stack-layer">
+          <div class="stack-dot stack-dot-4"></div>
+          <span class="stack-label">AI &amp; Data Foundation</span>
+          <span class="stack-sublabel">Pipelines &amp; ML</span>
+        </div>
+      </div>
+
+      <!-- Stack descriptions -->
+      <div class="stack-descs">
+        <div class="stack-desc-item">
+          <div class="stack-desc-tag">Client Interface</div>
+          <h4>Where your team gets the insights</h4>
+          <p>Dashboards, reports, scenario models, and real-time alerts delivered in the format your team actually uses &mdash; Excel, PowerBI, Slack, email, or custom portals.</p>
+        </div>
+        <div class="stack-desc-item">
+          <div class="stack-desc-tag">Deal Execution</div>
+          <h4>Your deal structure, our hands on the process</h4>
+          <p>Bid management, financial structuring, negotiation support, and stakeholder coordination. We execute alongside you through every stage of the deal lifecycle.</p>
+        </div>
+        <div class="stack-desc-item">
+          <div class="stack-desc-tag">Risk &amp; Analytics</div>
+          <h4>Quantitative frameworks refined over decades</h4>
+          <p>Hedging strategies, risk matrices, and macroeconomic models built by former trading desk operators and actuaries. Rigorous, quantitative, battle-tested.</p>
+        </div>
+        <div class="stack-desc-item">
+          <div class="stack-desc-tag">AI &amp; Data</div>
+          <h4>The layer that makes everything faster</h4>
+          <p>Automated data pipelines, ML-powered screening, and intelligent monitoring. Built by a team with patents in AI hardware and energy systems &mdash; not off-the-shelf tools.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     WHY SAUZE LABS
+================================================================ -->
+<section class="sect" id="why">
+  <div class="wrap">
+    <span class="label">Why Sauze Labs</span>
+    <div class="sect-h fu">Why companies choose us</div>
+
+    <div class="why-grid fu">
+
+      <div class="why-item">
+        <h4>Built by operators</h4>
+        <p>You work directly with partners who've traded emerging markets at Citi and Deutsche Bank, led investment committees at regional funds, and founded companies in energy and deep-tech. No layers of account managers &mdash; the people you meet are the people who do the work.</p>
+      </div>
+
+      <div class="why-item">
+        <h4>In your market, on your deal</h4>
+        <p>We design and build inside your regulatory environment, your financial structure, and your risk model. Every deliverable is tailored to your specific project &mdash; not a recycled template from a different geography.</p>
+      </div>
+
+      <div class="why-item">
+        <h4>From first analysis to ongoing operations</h4>
+        <p>Strategy, bid support, risk frameworks, financial close &mdash; one through-line. Every engagement is scoped around a real business KPI and a concrete execution roadmap. We stay with you until the deal is done.</p>
+      </div>
+
+      <div class="why-item">
+        <h4>Compounding value, not one-off projects</h4>
+        <p>Patterns we see across engagements feed our internal models and AI tools. You get refined frameworks and playbooks instead of paying to reinvent the same analysis from scratch on every new deal.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     THE PARTNERS
+================================================================ -->
+<section class="sect" id="team" style="background:var(--white);">
+  <div class="wrap">
+    <span class="label">Who we are</span>
+    <div class="sect-h fu">The Partners</div>
+
+    <div class="team-list">
+
+      <!-- Agustina Colloca -->
+      <div class="team-row fu">
+        <div class="team-photo">AC</div>
+        <div class="team-info">
+          <h3 class="team-name">Agustina Colloca</h3>
+          <div class="team-role">Partner &mdash; Finance &amp; Risk</div>
+          <p class="team-bio">Former Regional CIO at PUENTE and Head of Institutional Sales at Santander CIB. Actuary by training with a Master's in Finance from San Andr&eacute;s and an MBA from Northwestern Kellogg. 15+ years structuring complex financial transactions and managing risk functions across Latin America.</p>
+          <a href="https://www.linkedin.com/in/maria-agustina-colloca-939b7b28/" target="_blank" rel="noopener noreferrer" class="team-link">
+            LinkedIn
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 12L12 4M12 4H5M12 4v7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Federico Wajnerman -->
+      <div class="team-row fu">
+        <div class="team-photo">FW</div>
+        <div class="team-info">
+          <h3 class="team-name">Federico Wajnerman</h3>
+          <div class="team-role">Partner &mdash; Energy &amp; Markets</div>
+          <p class="team-bio">MIT Innovator Under 35. Former VP Trader at Citi and FX/Emerging Markets Trader at Deutsche Bank in New York. Currently CEO of M4Life (biotech). 6+ years on Wall Street trading desks focused on LATAM and CEEMEA &mdash; FX, fixed income, and commodity markets. Series 7, 63 &amp; SIE certified.</p>
+          <a href="https://www.linkedin.com/in/fwajnerman/" target="_blank" rel="noopener noreferrer" class="team-link">
+            LinkedIn
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 12L12 4M12 4H5M12 4v7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- David Trejo -->
+      <div class="team-row fu">
+        <div class="team-photo">DT</div>
+        <div class="team-info">
+          <h3 class="team-name">David Trejo</h3>
+          <div class="team-role">Partner &mdash; Technology &amp; Energy</div>
+          <p class="team-bio">MIT Technology Review Innovator Under 35 LATAM. Founded Carbo Energy (energy storage) and Nydro Energy (acquired by Aramco Power). Patents in AI hardware, energy storage, and grid optimisation. Executive programs at Stanford (M&amp;A) and UC Berkeley (VC). M.Sc. Energy from Karlsruhe Institute of Technology.</p>
+          <a href="https://www.linkedin.com/in/dtrejopizzo/" target="_blank" rel="noopener noreferrer" class="team-link">
+            LinkedIn
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 12L12 4M12 4H5M12 4v7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     FAQ
+================================================================ -->
+<section class="sect" id="faq">
+  <div class="wrap">
+    <span class="label">FAQ</span>
+    <div class="sect-h fu">Frequently asked questions</div>
+
+    <div class="faq-list fu">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What types of projects do you work on?
+          <svg class="faq-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
+        </button>
+        <div class="faq-a">Large-scale energy (renewables, oil &amp; gas, power generation), mining and natural resources, and infrastructure (transport, water, utilities) projects across Latin America. Typical engagements span $50M to multi-billion dollar projects at any stage from bid preparation to financial close and operations.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How do you help international companies enter LATAM?
+          <svg class="faq-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
+        </button>
+        <div class="faq-a">End-to-end market entry support: regulatory landscape analysis, competitive intelligence, local partner identification and vetting, bid strategy, and stakeholder relationship management. We help avoid the pitfalls that trip up international players &mdash; from currency controls in Argentina to concession structures in Chile and permitting in Brazil.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What does your risk management approach look like?
+          <svg class="faq-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
+        </button>
+        <div class="faq-a">Comprehensive risk frameworks covering financial risk (currency, rates, commodities), political and regulatory risk, operational risk, and counterparty risk. We don't just identify risks &mdash; we quantify them, design mitigation strategies, and implement hedging programs. Our actuarial background gives us a rigorous, quantitative approach.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How do you integrate AI into your work?
+          <svg class="faq-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
+        </button>
+        <div class="faq-a">Our team includes AI builders and patent holders. We use AI to accelerate deal screening, automate data aggregation from LATAM regulatory sources, build macroeconomic models, and monitor real-time risk indicators. We also help clients deploy AI systems into their own deal and analysis processes &mdash; custom solutions, not off-the-shelf tools.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What does a typical engagement look like?
+          <svg class="faq-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
+        </button>
+        <div class="faq-a">We start with a working session to map your project and where we add the most value. From there, engagements range from focused sprints (bid preparation, hedging design, market entry analysis) to longer-term strategic partnerships. Always scoped around a concrete business objective, not a billable hours model.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Which countries in LATAM do you cover?
+          <svg class="faq-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
+        </button>
+        <div class="faq-a">Deep expertise across Argentina, Chile, Brazil, Colombia, Peru, and Uruguay, with experience in Bolivia and Paraguay. Our regulatory and macroeconomic knowledge spans the full region, and our networks cover government, financial institutions, and corporate counterparts across these markets.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     CTA
+================================================================ -->
+<section class="cta-sect" id="contact">
+  <div class="wrap">
+    <h2 class="sect-h">See it running on <em>your next deal</em></h2>
+    <p class="sect-sub">Book a short working session. We'll map your project and outline a plan that ships.</p>
+    <a href="mailto:contact@sauzlabs.com" class="btn btn-p btn-arrow">Book a call</a>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     FOOTER
+================================================================ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+
+      <div>
+        <a href="#" class="nav-logo">
+          <svg width="22" height="22" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#5B6B54" stroke-width="1.5"/>
+            <polygon points="14,7 21,11 21,19 14,23 7,19 7,11" fill="rgba(91,107,84,0.10)"/>
+            <circle cx="14" cy="14.5" r="3" fill="#5B6B54"/>
+          </svg>
+          Sauze Labs
+        </a>
+        <p class="footer-about">A strategic advisory firm that bridges the gap between complex LATAM deals and real execution.</p>
+      </div>
+
+      <div class="footer-col">
+        <h5>Navigate</h5>
+        <ul>
+          <li><a href="#services">Case studies</a></li>
+          <li><a href="#why">Why Sauze Labs</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Connect</h5>
+        <ul>
+          <li><a href="mailto:contact@sauzlabs.com">contact@sauzlabs.com</a></li>
+          <li>
+            <a href="https://www.linkedin.com/company/sauze-labs" target="_blank" rel="noopener noreferrer">
+              LinkedIn &nearr;
+            </a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 Sauze Labs. All rights reserved.</span>
+      <span>Buenos Aires &middot; San Francisco</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ================================================================
+     SCRIPTS
+================================================================ -->
+<script>
+  // Mobile nav
+  document.getElementById('ham').addEventListener('click', () => {
+    document.getElementById('mobNav').classList.toggle('open');
+  });
+  function closeNav() { document.getElementById('mobNav').classList.remove('open'); }
+
+  // Case studies tabs
+  function showCase(idx, btn) {
+    document.querySelectorAll('.case-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.case-detail-item').forEach(d => d.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector('[data-case="'+idx+'"]').classList.add('active');
+  }
+
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  // Scroll fade-in
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fu').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
