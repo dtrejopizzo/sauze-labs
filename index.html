@@ -337,13 +337,13 @@
     .team-photo {
       width: 140px; height: 140px;
       border-radius: 10px; overflow: hidden;
-      background: var(--bg-sage);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px; font-weight: 700;
-      font-family: 'Merriweather', serif;
-      color: var(--green);
-      /* Replace with <img> for actual photos */
-      filter: grayscale(0);
+      flex-shrink: 0;
+    }
+    .team-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
+      filter: grayscale(1) contrast(1.05) brightness(1.02);
     }
 
     .team-info {}
@@ -458,7 +458,7 @@
       .cases-sidebar { border-right: none; border-bottom: 1px solid var(--border); }
       .stack-layout { grid-template-columns: 1fr; gap: 40px; }
       .team-row { grid-template-columns: 100px 1fr; gap: 24px; }
-      .team-photo { width: 100px; height: 100px; font-size: 24px; }
+      .team-photo { width: 100px; height: 100px; }
       .footer-grid { grid-template-columns: 1fr; gap: 32px; }
     }
     @media (max-width: 768px) {
@@ -466,7 +466,7 @@
       .hamburger { display: block; }
       .why-grid { grid-template-columns: 1fr; gap: 32px; }
       .team-row { grid-template-columns: 1fr; }
-      .team-photo { width: 120px; height: 120px; }
+      .team-photo { width: 110px; height: 110px; }
       .sect { padding: 72px 0; }
       .hero-content { padding: 40px 0 60px; }
       .footer-bottom { flex-direction: column; gap: 8px; align-items: flex-start; }
@@ -495,6 +495,7 @@
         <a href="#services">Case studies</a>
         <a href="#why">Why Sauze Labs</a>
         <a href="#faq">FAQ</a>
+        <a href="blog.html">Blog</a>
       </div>
 
       <div class="nav-cta">
@@ -513,6 +514,7 @@
     <li><a href="#services" onclick="closeNav()">Case studies</a></li>
     <li><a href="#why" onclick="closeNav()">Why Sauze Labs</a></li>
     <li><a href="#faq" onclick="closeNav()">FAQ</a></li>
+    <li><a href="blog.html" onclick="closeNav()">Blog</a></li>
   </ul>
   <a href="#contact" class="btn btn-p btn-arrow" style="width:100%;justify-content:center;" onclick="closeNav()">Talk to our team</a>
 </div>
@@ -528,9 +530,9 @@
 
       <span class="hero-label">Strategic Advisory</span>
 
-      <h1 class="hero-h1">Your partner for <em>energy, mining</em> and <em>infrastructure</em> deals in LATAM</h1>
+      <h1 class="hero-h1">Your AI partner for <em>energy, mining</em> and <em>infrastructure</em> deals in LATAM</h1>
 
-      <p class="hero-p">We work with companies and investors to navigate complex projects across Latin America&nbsp;&mdash; from bid to financial close and beyond.</p>
+      <p class="hero-p">We work with companies and investors to navigate high stake projects across Latin America&nbsp;&mdash; from bid to financial close and beyond.</p>
 
       <div class="hero-cta">
         <a href="#contact" class="btn btn-p btn-arrow">Book a working session</a>
@@ -546,17 +548,17 @@
 ================================================================ -->
 <section class="sect cases" id="services">
   <div class="wrap">
-    <div class="sect-h fu">End-to-end advisory for complex deals</div>
+    <div class="sect-h fu">End-to-end advisory for high-stake deals</div>
+    <p class="sect-sub fu" style="margin-bottom:8px;">AI is not one of our services &mdash; it is the engine behind all of them.</p>
 
     <div class="cases-grid fu">
       <!-- Sidebar tabs -->
       <div class="cases-sidebar">
         <button class="case-tab active" onclick="showCase(0,this)">Full bid process management for large-scale tenders</button>
         <button class="case-tab" onclick="showCase(1,this)">Financial risk hedging across volatile LATAM markets</button>
-        <button class="case-tab" onclick="showCase(2,this)">Comprehensive risk frameworks for complex projects</button>
-        <button class="case-tab" onclick="showCase(3,this)">Macroeconomic research & country analysis</button>
+        <button class="case-tab" onclick="showCase(2,this)">Comprehensive risk frameworks for high-stake projects</button>
+        <button class="case-tab" onclick="showCase(3,this)">Macroeconomic research &amp; deep-dive industry analysis</button>
         <button class="case-tab" onclick="showCase(4,this)">LATAM market entry for international firms</button>
-        <button class="case-tab" onclick="showCase(5,this)">AI integration into deal & analysis workflows</button>
       </div>
 
       <!-- Detail panels -->
@@ -565,9 +567,9 @@
         <div class="case-detail-item active" data-case="0">
           <span class="case-tag">Bid Management</span>
           <h3 class="case-title">Full bid process management for large-scale tenders</h3>
-          <p class="case-desc">Complete lifecycle support from pre-qualification to contract award. We structure your offer, coordinate technical and financial components, and build the narrative that wins competitive tenders in LATAM's energy, mining, and infrastructure sectors.</p>
+          <p class="case-desc">Complete lifecycle support from pre-qualification to contract award. We assist you in structuring your offer, coordinate technical and financial components, and build the narrative that wins competitive tenders in LATAM's energy, mining, and infrastructure sectors.</p>
           <div class="case-metrics">
-            <div class="case-metric">End-to-end coordination from PQ to award</div>
+            <div class="case-metric">End-to-end coordination from pre-qualification to award</div>
             <div class="case-metric">Projects spanning $50M to multi-billion dollar scale</div>
             <div class="case-metric">Deep knowledge of LATAM tender processes and stakeholders</div>
           </div>
@@ -576,33 +578,33 @@
         <div class="case-detail-item" data-case="1">
           <span class="case-tag">Financial Hedging</span>
           <h3 class="case-title">Financial risk hedging across volatile LATAM markets</h3>
-          <p class="case-desc">Design and execution of hedging strategies for FX, interest rate, and commodity exposures. Our partners have traded these instruments on the desks of Citi and Deutsche Bank &mdash; we bring that precision to protect your project economics.</p>
+          <p class="case-desc">Design of hedging strategies for FX, interest rate, and commodity exposures. Our partners developed this expertise at top-tier financial institutions worldwide &mdash; we bring that precision to protect your project economics against LATAM's structural volatility.</p>
           <div class="case-metrics">
             <div class="case-metric">Custom hedging strategies for FX, rates, and commodities</div>
-            <div class="case-metric">Built by former Wall Street EM traders</div>
+            <div class="case-metric">Backed by Wall Street trading desk expertise</div>
             <div class="case-metric">Structured to match project cash flow profiles</div>
           </div>
         </div>
 
         <div class="case-detail-item" data-case="2">
           <span class="case-tag">Risk Management</span>
-          <h3 class="case-title">Comprehensive risk frameworks for complex projects</h3>
-          <p class="case-desc">We build risk matrices spanning political, regulatory, operational, financial, and counterparty risk &mdash; tailored to LATAM's unique environment. Risks are not just identified but quantified, monitored, and systematically mitigated.</p>
+          <h3 class="case-title">Comprehensive risk frameworks for high-stake projects</h3>
+          <p class="case-desc">We build risk matrices spanning political, regulatory, operational, and financial dimensions &mdash; tailored to LATAM's unique environment. Risks are not just identified but quantified, monitored, and systematically mitigated throughout the project lifecycle.</p>
           <div class="case-metrics">
             <div class="case-metric">Quantitative approach grounded in actuarial methods</div>
             <div class="case-metric">Covers political, regulatory, operational and financial risks</div>
-            <div class="case-metric">Ongoing monitoring and adjustment frameworks</div>
+            <div class="case-metric">Ongoing monitoring and dynamic adjustment frameworks</div>
           </div>
         </div>
 
         <div class="case-detail-item" data-case="3">
-          <span class="case-tag">Macro Research</span>
-          <h3 class="case-title">Macroeconomic research &amp; country analysis</h3>
-          <p class="case-desc">Deep analysis of LATAM macro dynamics for investment decisions: inflation trajectories, currency regimes, sovereign risk, fiscal and monetary policy, and sectoral outlooks across Argentina, Brazil, Chile, Colombia, Peru, and beyond.</p>
+          <span class="case-tag">Macro &amp; Industry Research</span>
+          <h3 class="case-title">Macroeconomic research &amp; deep-dive industry analysis</h3>
+          <p class="case-desc">Rigorous macro analysis combined with sector-specific deep dives: inflation trajectories, currency regimes, sovereign risk, fiscal policy, and granular industry dynamics across energy, mining, and infrastructure in Latin America.</p>
           <div class="case-metrics">
             <div class="case-metric">Country-level macro models for investment screening</div>
-            <div class="case-metric">Real-time monitoring of policy and regulatory shifts</div>
-            <div class="case-metric">Scenario analysis for project stress-testing</div>
+            <div class="case-metric">Sector deep dives: energy, mining, and infrastructure</div>
+            <div class="case-metric">Scenario analysis and stress-testing for project decisions</div>
           </div>
         </div>
 
@@ -611,20 +613,9 @@
           <h3 class="case-title">LATAM market entry for international firms</h3>
           <p class="case-desc">Guiding first-time entrants through LATAM's complexity: regulatory navigation, local partner identification, competitive intelligence, stakeholder mapping, and on-the-ground relationship management. We help you avoid the pitfalls that cost time and capital.</p>
           <div class="case-metrics">
-            <div class="case-metric">Regulatory and concession framework mapping</div>
+            <div class="case-metric">Regulatory and concession framework mapping by country</div>
             <div class="case-metric">Local partner vetting and relationship building</div>
-            <div class="case-metric">Tailored go-to-market strategy per country</div>
-          </div>
-        </div>
-
-        <div class="case-detail-item" data-case="5">
-          <span class="case-tag">AI Integration</span>
-          <h3 class="case-title">AI integration into deal &amp; analysis workflows</h3>
-          <p class="case-desc">We embed AI tools into your deal screening, risk monitoring, and reporting pipelines. From automated data aggregation of LATAM regulatory filings to LLM-powered research and real-time risk dashboards &mdash; custom-built for your specific workflows.</p>
-          <div class="case-metrics">
-            <div class="case-metric">Custom AI pipelines for deal screening and due diligence</div>
-            <div class="case-metric">Automated regulatory and macro data aggregation</div>
-            <div class="case-metric">Built by engineers with AI hardware patents</div>
+            <div class="case-metric">Tailored market entry strategy and execution support</div>
           </div>
         </div>
 
@@ -640,7 +631,7 @@
 <section class="sect stack-sect" id="approach">
   <div class="wrap">
     <span class="label">Our Approach</span>
-    <div class="sect-h fu">The Sauze Difference</div>
+    <div class="sect-h fu">The Secret Sauze</div>
 
     <div class="stack-layout fu">
 
@@ -648,47 +639,42 @@
       <div class="stack-visual">
         <div class="stack-layer">
           <div class="stack-dot stack-dot-1"></div>
-          <span class="stack-label">Client Interface</span>
-          <span class="stack-sublabel">Reports &amp; Dashboards</span>
+          <span class="stack-label">AI Agents &amp; Automation</span>
+          <span class="stack-sublabel">The operating layer</span>
         </div>
         <div class="stack-layer">
           <div class="stack-dot stack-dot-2"></div>
-          <span class="stack-label">Deal Execution</span>
-          <span class="stack-sublabel">Bids &amp; Structuring</span>
+          <span class="stack-label">Wall Street Finance</span>
+          <span class="stack-sublabel">Risk, hedging &amp; structuring</span>
         </div>
         <div class="stack-layer">
           <div class="stack-dot stack-dot-3"></div>
-          <span class="stack-label">Risk &amp; Analytics</span>
-          <span class="stack-sublabel">Hedging &amp; Models</span>
+          <span class="stack-label">Energy &amp; Industry Expertise</span>
+          <span class="stack-sublabel">Sector-specific intelligence</span>
         </div>
         <div class="stack-layer">
           <div class="stack-dot stack-dot-4"></div>
-          <span class="stack-label">AI &amp; Data Foundation</span>
-          <span class="stack-sublabel">Pipelines &amp; ML</span>
+          <span class="stack-label">Deep LATAM Knowledge</span>
+          <span class="stack-sublabel">Region, regulation &amp; networks</span>
         </div>
       </div>
 
       <!-- Stack descriptions -->
       <div class="stack-descs">
         <div class="stack-desc-item">
-          <div class="stack-desc-tag">Client Interface</div>
-          <h4>Where your team gets the insights</h4>
-          <p>Dashboards, reports, scenario models, and real-time alerts delivered in the format your team actually uses &mdash; Excel, PowerBI, Slack, email, or custom portals.</p>
+          <div class="stack-desc-tag">The question worth asking</div>
+          <h4>What happens when AI agents take over your operations?</h4>
+          <p>Not hypothetically &mdash; operationally. We are building the answer: purpose-built agents that handle due diligence, risk monitoring, macro research, and reporting at a fraction of the time and cost. The firms that deploy this infrastructure first will define the next decade in LATAM.</p>
         </div>
         <div class="stack-desc-item">
-          <div class="stack-desc-tag">Deal Execution</div>
-          <h4>Your deal structure, our hands on the process</h4>
-          <p>Bid management, financial structuring, negotiation support, and stakeholder coordination. We execute alongside you through every stage of the deal lifecycle.</p>
+          <div class="stack-desc-tag">The combination no one else has</div>
+          <h4>AI &times; Finance &times; Energy &times; LATAM</h4>
+          <p>Our edge is the intersection. AI builders with hardware patents. Former trading desk operators from top global institutions. Deep expertise in energy, mining, and infrastructure. And two decades of on-the-ground experience navigating LATAM's regulatory and political complexity. Together, these don't add up &mdash; they multiply.</p>
         </div>
         <div class="stack-desc-item">
-          <div class="stack-desc-tag">Risk &amp; Analytics</div>
-          <h4>Quantitative frameworks refined over decades</h4>
-          <p>Hedging strategies, risk matrices, and macroeconomic models built by former trading desk operators and actuaries. Rigorous, quantitative, battle-tested.</p>
-        </div>
-        <div class="stack-desc-item">
-          <div class="stack-desc-tag">AI &amp; Data</div>
-          <h4>The layer that makes everything faster</h4>
-          <p>Automated data pipelines, ML-powered screening, and intelligent monitoring. Built by a team with patents in AI hardware and energy systems &mdash; not off-the-shelf tools.</p>
+          <div class="stack-desc-tag">How we work</div>
+          <h4>A methodology designed for high-stake environments</h4>
+          <p>Every engagement begins with a rigorous diagnostic. We map your deal structure, risk surface, and data environment before recommending anything. From there, we deploy frameworks and agents that are calibrated to your specific context &mdash; not recycled from a previous client.</p>
         </div>
       </div>
 
@@ -703,28 +689,28 @@
 <section class="sect" id="why">
   <div class="wrap">
     <span class="label">Why Sauze Labs</span>
-    <div class="sect-h fu">Why companies choose us</div>
+    <div class="sect-h fu">We give your team superpowers</div>
 
     <div class="why-grid fu">
 
       <div class="why-item">
-        <h4>Built by operators</h4>
-        <p>You work directly with partners who've traded emerging markets at Citi and Deutsche Bank, led investment committees at regional funds, and founded companies in energy and deep-tech. No layers of account managers &mdash; the people you meet are the people who do the work.</p>
+        <h4>Tailor-made agents, not generic tools</h4>
+        <p>We design and deploy AI agents built around your specific deal structure, risk profile, and operating context. Not an isolated chatbot &mdash; a coordinated system of agents that handles research, monitoring, and analysis in parallel, continuously, and at scale.</p>
       </div>
 
       <div class="why-item">
-        <h4>In your market, on your deal</h4>
-        <p>We design and build inside your regulatory environment, your financial structure, and your risk model. Every deliverable is tailored to your specific project &mdash; not a recycled template from a different geography.</p>
+        <h4>Wall Street financial expertise, now accessible</h4>
+        <p>Decades of experience structuring complex financial instruments at top global institutions, now embedded directly into your workflows. Hedging frameworks, risk models, and macro analysis that used to require an entire trading desk &mdash; available to your team on demand.</p>
       </div>
 
       <div class="why-item">
-        <h4>From first analysis to ongoing operations</h4>
-        <p>Strategy, bid support, risk frameworks, financial close &mdash; one through-line. Every engagement is scoped around a real business KPI and a concrete execution roadmap. We stay with you until the deal is done.</p>
+        <h4>Industry intelligence that compounds</h4>
+        <p>Deep sector expertise in energy, mining, and infrastructure &mdash; refined across dozens of high-stake engagements in LATAM. Every new mandate sharpens our models and broadens our network. Your team benefits from everything we have learned, from day one.</p>
       </div>
 
       <div class="why-item">
-        <h4>Compounding value, not one-off projects</h4>
-        <p>Patterns we see across engagements feed our internal models and AI tools. You get refined frameworks and playbooks instead of paying to reinvent the same analysis from scratch on every new deal.</p>
+        <h4>Decisions that scale with your ambition</h4>
+        <p>We transform how your organization processes information and makes decisions. Faster due diligence, sharper risk assessments, and real-time monitoring allow your team to pursue more opportunities with greater confidence &mdash; without adding headcount.</p>
       </div>
 
     </div>
@@ -742,11 +728,11 @@
 
     <div class="team-list">
 
-      <!-- Agustina Colloca -->
+      <!-- Maria Colloca -->
       <div class="team-row fu">
-        <div class="team-photo">AC</div>
+        <div class="team-photo"><img src="agus.jpeg" alt="Maria Agustina Colloca"></div>
         <div class="team-info">
-          <h3 class="team-name">Agustina Colloca</h3>
+          <h3 class="team-name">Maria Colloca</h3>
           <div class="team-role">Partner &mdash; Finance &amp; Risk</div>
           <p class="team-bio">Former Regional CIO at PUENTE and Head of Institutional Sales at Santander CIB. Actuary by training with a Master's in Finance from San Andr&eacute;s and an MBA from Northwestern Kellogg. 15+ years structuring complex financial transactions and managing risk functions across Latin America.</p>
           <a href="https://www.linkedin.com/in/maria-agustina-colloca-939b7b28/" target="_blank" rel="noopener noreferrer" class="team-link">
@@ -760,11 +746,11 @@
 
       <!-- Federico Wajnerman -->
       <div class="team-row fu">
-        <div class="team-photo">FW</div>
+        <div class="team-photo"><img src="fede.jpeg" alt="Federico Wajnerman"></div>
         <div class="team-info">
           <h3 class="team-name">Federico Wajnerman</h3>
-          <div class="team-role">Partner &mdash; Energy &amp; Markets</div>
-          <p class="team-bio">MIT Innovator Under 35. Former VP Trader at Citi and FX/Emerging Markets Trader at Deutsche Bank in New York. Currently CEO of M4Life (biotech). 6+ years on Wall Street trading desks focused on LATAM and CEEMEA &mdash; FX, fixed income, and commodity markets. Series 7, 63 &amp; SIE certified.</p>
+          <div class="team-role">Partner &mdash; Finance &amp; Markets</div>
+          <p class="team-bio">MIT Innovator Under 35. Former VP Trader at top-tier global institutions and former CEO of M4Life. 10+ years on trading desks focused on LATAM and emerging markets &mdash; FX, fixed income, and commodity markets. Series 7, 63 &amp; SIE certified.</p>
           <a href="https://www.linkedin.com/in/fwajnerman/" target="_blank" rel="noopener noreferrer" class="team-link">
             LinkedIn
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -776,7 +762,7 @@
 
       <!-- David Trejo -->
       <div class="team-row fu">
-        <div class="team-photo">DT</div>
+        <div class="team-photo"><img src="david.jpeg" alt="David Trejo"></div>
         <div class="team-info">
           <h3 class="team-name">David Trejo</h3>
           <div class="team-role">Partner &mdash; Technology &amp; Energy</div>
@@ -818,7 +804,7 @@
           How do you help international companies enter LATAM?
           <svg class="faq-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
         </button>
-        <div class="faq-a">End-to-end market entry support: regulatory landscape analysis, competitive intelligence, local partner identification and vetting, bid strategy, and stakeholder relationship management. We help avoid the pitfalls that trip up international players &mdash; from currency controls in Argentina to concession structures in Chile and permitting in Brazil.</div>
+        <div class="faq-a">End-to-end market entry support: regulatory landscape analysis, competitive intelligence, local partner identification and vetting, bid strategy, and stakeholder relationship management. We help international firms navigate LATAM's structural complexity &mdash; from currency controls and concession frameworks to permitting processes and local stakeholder dynamics, which vary significantly across the region.</div>
       </div>
 
       <div class="faq-item">
@@ -826,7 +812,7 @@
           What does your risk management approach look like?
           <svg class="faq-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
         </button>
-        <div class="faq-a">Comprehensive risk frameworks covering financial risk (currency, rates, commodities), political and regulatory risk, operational risk, and counterparty risk. We don't just identify risks &mdash; we quantify them, design mitigation strategies, and implement hedging programs. Our actuarial background gives us a rigorous, quantitative approach.</div>
+        <div class="faq-a">Comprehensive risk frameworks covering financial risk (currency, rates, commodities), political and regulatory risk, and operational risk &mdash; tailored to LATAM's unique environment. We don't just identify risks: we quantify them, design mitigation strategies, and structure hedging programs. Our actuarial background gives us a rigorous, quantitative discipline that most advisory firms lack.</div>
       </div>
 
       <div class="faq-item">
@@ -863,9 +849,9 @@
 ================================================================ -->
 <section class="cta-sect" id="contact">
   <div class="wrap">
-    <h2 class="sect-h">See it running on <em>your next deal</em></h2>
-    <p class="sect-sub">Book a short working session. We'll map your project and outline a plan that ships.</p>
-    <a href="mailto:contact@sauzlabs.com" class="btn btn-p btn-arrow">Book a call</a>
+    <h2 class="sect-h">Ready to elevate <em>your next engagement</em>?</h2>
+    <p class="sect-sub">Schedule a working session. We will assess your project and outline a concrete action plan.</p>
+    <a href="mailto:contact@sauzelabs.com" class="btn btn-p btn-arrow">Request a meeting</a>
   </div>
 </section>
 
@@ -901,9 +887,10 @@
       <div class="footer-col">
         <h5>Connect</h5>
         <ul>
-          <li><a href="mailto:contact@sauzlabs.com">contact@sauzlabs.com</a></li>
+          <li><a href="mailto:contact@sauzelabs.com">contact@sauzelabs.com</a></li>
           <li>
-            <a href="https://www.linkedin.com/company/sauze-labs" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.linkedin.com/company
+            e/sauze-labs" target="_blank" rel="noopener noreferrer">
               LinkedIn &nearr;
             </a>
           </li>
