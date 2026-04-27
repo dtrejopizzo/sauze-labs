@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latam: The Art of Navigating Currency Volatility | Sauze Labs Blog</title>
+  <meta name="description" content="Understanding FX risk in Latin America requires more than textbook knowledge. It demands an appreciation for regional nuance, institutional dynamics, and the temporal structure of exposure.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#FAFAF6;--bg-sage:#F0F3EB;--green:#5B6B54;--green-h:#4A5A44;
+      --text:#1C1C1C;--text-2:#6B6B6B;--text-3:#999999;--border:#E5E5E0;
+      --white:#FFFFFF;--nav-h:72px;
+      --cat-biz:#8A6430;--cat-biz-bg:#F5EEE3;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;}
+    h1,h2,h3{font-family:'Merriweather',Georgia,serif;line-height:1.25;}
+    a{text-decoration:none;color:inherit;}
+
+    .nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);display:flex;align-items:center;background:rgba(250,250,246,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav .wrap{max-width:none;width:80%;margin:0 auto;padding:0 32px;}
+    .nav-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;width:100%;}
+    .nav-logo{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:600;justify-self:start;}
+    .nav-center{display:flex;gap:32px;justify-self:center;}
+    .nav-center a{font-size:14px;color:var(--text-2);transition:color .2s;}
+    .nav-center a:hover{color:var(--text);}
+    .nav-cta{justify-self:end;}
+    .btn-nav{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:100px;font-size:13px;font-weight:500;font-family:'Inter',sans-serif;background:var(--green);color:#fff;border:none;cursor:pointer;}
+    .btn-nav:hover{background:var(--green-h);}
+
+    .article-wrap{max-width:720px;margin:0 auto;padding:calc(var(--nav-h) + 64px) 32px 100px;}
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-3);margin-bottom:40px;transition:color .2s;}
+    .back-link:hover{color:var(--green);}
+    .cat-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:20px;background:var(--cat-biz-bg);color:var(--cat-biz);}
+    .article-title{font-size:clamp(28px,4vw,40px);font-weight:700;line-height:1.15;margin-bottom:20px;color:var(--text);}
+    .article-meta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-3);padding-bottom:32px;border-bottom:1px solid var(--border);margin-bottom:40px;}
+    .meta-dot{width:3px;height:3px;border-radius:50%;background:var(--border);}
+    .article-body{font-size:17px;color:var(--text);line-height:1.8;}
+    .article-body p{margin-bottom:24px;}
+    .article-body h2{font-size:24px;margin:40px 0 16px;color:var(--text);}
+    .article-body h3{font-size:19px;margin:32px 0 12px;color:var(--text);}
+    .article-body ul,.article-body ol{margin:0 0 24px 24px;color:var(--text-2);}
+    .article-body li{margin-bottom:8px;line-height:1.7;}
+    .article-body blockquote{border-left:3px solid var(--green);padding:4px 0 4px 20px;margin:32px 0;color:var(--text-2);font-style:italic;}
+    .article-body strong{color:var(--text);font-weight:600;}
+    .article-body a{color:var(--green);text-decoration:underline;text-underline-offset:3px;}
+    .author-bio{margin-top:64px;padding:28px;background:var(--bg-sage);border-radius:12px;border:1px solid var(--border);display:flex;align-items:flex-start;gap:20px;}
+    .author-avatar{width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;font-family:'Merriweather',serif;flex-shrink:0;}
+    .author-name{font-size:15px;font-weight:600;margin-bottom:4px;}
+    .author-role{font-size:13px;color:var(--green);margin-bottom:8px;}
+    .author-desc{font-size:14px;color:var(--text-2);line-height:1.65;}
+    .footer{padding:40px 0;border-top:1px solid var(--border);}
+    .footer-inner{max-width:none;width:80%;margin:0 auto;padding:0 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+    .footer-logo{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:600;}
+    .footer-copy{font-size:13px;color:var(--text-3);}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+          <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#5B6B54" stroke-width="1.5"/>
+          <polygon points="14,7 21,11 21,19 14,23 7,19 7,11" fill="rgba(91,107,84,0.10)"/>
+          <circle cx="14" cy="14.5" r="3" fill="#5B6B54"/>
+        </svg>
+        Sauze Labs
+      </a>
+      <div class="nav-center">
+        <a href="../index.html#services">Case studies</a>
+        <a href="../index.html#why">Why Sauze Labs</a>
+        <a href="../index.html#faq">FAQ</a>
+        <a href="../blog.html">Blog</a>
+      </div>
+      <div class="nav-cta">
+        <a href="../index.html#contact" class="btn-nav">Talk to our team →</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+  <span class="cat-badge">Business</span>
+
+  <h1 class="article-title">Latam: The Art of Navigating Currency Volatility</h1>
+
+  <div class="article-meta">
+    <span>April 27, 2026</span>
+    <span class="meta-dot"></span>
+    <span>Federico Wajnerman</span>
+  </div>
+
+  <div class="article-body">
+
+    <p>A few years ago, a friend from the United States came to visit — she's a big art lover. I took her to MALBA (Museum of Latin American Art of Buenos Aires), a truly stunning place from every angle: architectural, artistic, cultural. During our tour, we stopped in front of a very peculiar piece: a sign that read "Dolar(es)" with a list of 25 different exchange rates.</p>
+
+    <p>As hard as it may be to believe, Argentina went through a period where multiple exchange rates coexisted, and explaining the country's FX regime was just as hard as understanding it. But that's how we lived, and how we survived.</p>
+
+    <p>In Argentina, almost any citizen knows the daily quote for both the official dollar and the parallel rate (the "blue"). I'm not talking about a money desk operator — I mean the cab driver, the school teacher, the pizza shop owner. In Brazil, by contrast, very few people track the USD rate. Brazilians are used to saving in Reais; Argentines, after traumatic historical experiences, have no confidence in their own currency — which went from 1 to 1,400 per dollar in the last 25 years.</p>
+
+    <h2>Volatility: A Trader's Raw Material, an Industry's Poison</h2>
+
+    <p>We traders live off volatility. We don't care about directionality; what matters is that prices move, because that's where value capture happens — some trades will generate profits, others losses, the classic P&L. Stability is, ironically, our worst enemy.</p>
+
+    <p>But this logic doesn't hold for non-financial corporates. For them, that same volatility destroys any capacity for forward planning and margin predictability. And Latin America has layered this FX stress onto an already challenging operating environment. Over the years, for a machinery distributor, the move in the exchange rate can carry more P&L impact than the price of the product itself.</p>
+
+    <p>In the canonical textbooks (Hull's <em>Options, Futures, and Other Derivatives</em> being the reference) futures are presented as hedging instruments: they allow producers to offload currency risk and focus on their core business. But the hedging market has evolved. Today, many corporates take outright financial positions that have nothing to do with their underlying exposure. How has that worked out? Very well for some, catastrophically for others. The pattern repeats: banks tend to be the consistent winners.</p>
+
+    <p>Does the bank have an informational edge? Generally, no — and if it did, that would constitute insider trading. The real difference is that banks maintain exhaustive control over their exposure, with granular risk decomposition. Their positions are deliberate and measured, not accidental.</p>
+
+    <h2>Risk Is Not Just Nominal — It's Temporal</h2>
+
+    <p>Banks monitor metrics that remain unfamiliar even to many CFOs, such as DV01 (dollar value of a basis point): the P&L impact of a parallel 1bp shift across the rate curve. Conceptually, it's intuitive: a USD 1 million currency exposure carries a fundamentally different risk profile depending on tenor.</p>
+
+    <p>If a company owes that million and settlement is in 1 month, the mark-to-market risk is contained by the proximity of expiry. If the settlement date is 1 year out, the risk grows exponentially: over 12 months, the probability of disruptive events — political shocks, rate decisions, commodity swings — increases dramatically. That position must be managed on the basis of its economic sensitivity to time, not simply its notional value.</p>
+
+    <h2>Rofex: From Grain to Financial Dominance</h2>
+
+    <p>A fascinating case study is Rofex (now Matba Rofex). It was founded in Rosario in 1909 — home to one of Argentina's main agricultural export terminals — to provide grain producers with price certainty through forward hedging.</p>
+
+    <p>It wasn't until 2002 that it listed financial futures on the US dollar. The timing is logical: the convertibility peg of the 1990s eliminated FX risk and left no room for currency speculation. But today the numbers are striking: currency futures volume runs at 12x grain volume. A platform built for agricultural hedging became Argentina's most significant derivatives exchange, where banks, asset managers, and even retail participants trade.</p>
+
+    <h2>The Stability Paradox: Peru vs. Argentina</h2>
+
+    <p>Latam is a region united by risk, yet remarkably heterogeneous. It's difficult to explain to a US or European counterpart that FX dynamics in Peru bear little correlation to Argentina's.</p>
+
+    <p>Consider the data. In 2001, Argentina maintained its 1-to-1 convertibility peg, and the Peruvian Sol traded at roughly 3.50 per dollar. Today, 25 years later, the Argentine Peso sits at 1,400 while the Sol trades near 3.45. The Peso lost virtually all of its value; the Sol actually posted a slight appreciation.</p>
+
+    <p>On that basis alone, you'd conclude Peru is a far more stable country than Argentina. Economically, that's beyond debate. But politically, the picture inverts: Peru has cycled through 7 presidents in the last 10 years (4 of whom were sentenced to prison), while Argentina has had only 3.</p>
+
+    <p>What explains this divergence? One data point is revealing: during that same decade of 3 presidents, the Central Bank of Argentina (BCRA) went through 6 different governors. The Central Reserve Bank of Peru (BCRP), by contrast, maintained the same leadership throughout, effectively insulating monetary policy from the constant presidential turnover. Institutional continuity at the central bank level proved more determinant than political stability at the executive level.</p>
+
+    <p>And then there's Chile. It shares geological and mining characteristics with Peru — creating meaningful short-term correlation — but its currency went from 630 in 2001 to nearly 900 today. If both economies are exposed to the same commodity cycle, why did the Sol appreciate while the Chilean Peso depreciated?</p>
+
+    <p>Welcome to Latam: a region as rich and extraordinary as it is complex. A place where survival means understanding that risk isn't something you avoid — it's something you manage.</p>
+
+  </div>
+
+  <div class="author-bio">
+    <div class="author-avatar">FW</div>
+    <div>
+      <div class="author-name">Federico Wajnerman</div>
+      <div class="author-role">Partner — Finance &amp; Risk</div>
+      <div class="author-desc">Deep expertise in FX structuring, emerging market volatility, and currency hedging strategies in Latin America. Has navigated complex regulatory environments and structured derivatives programs across the region.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="../index.html" class="footer-logo">
+      <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+        <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#5B6B54" stroke-width="1.5"/>
+        <polygon points="14,7 21,11 21,19 14,23 7,19 7,11" fill="rgba(91,107,84,0.10)"/>
+        <circle cx="14" cy="14.5" r="3" fill="#5B6B54"/>
+      </svg>
+      Sauze Labs
+    </a>
+    <span class="footer-copy">&copy; 2026 Sauze Labs. All rights reserved.</span>
+  </div>
+</footer>
+
+</body>
+</html>

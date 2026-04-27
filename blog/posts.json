@@ -1,0 +1,34 @@
+[
+  {
+    "slug": "latam-currency-volatility",
+    "title": "Latam: The Art of Navigating Currency Volatility",
+    "date": "2026-04-27",
+    "author": "Federico Wajnerman",
+    "category": "business",
+    "excerpt": "Understanding FX risk in Latin America requires more than textbook knowledge. It demands an appreciation for regional nuance, institutional dynamics, and the temporal structure of exposure."
+  },
+  {
+    "slug": "ai-agents-latam-energy-transition",
+    "title": "AI Agents and the LATAM Energy Transition: What Changes Now",
+    "date": "2026-04-27",
+    "author": "David Trejo",
+    "category": "technology",
+    "excerpt": "As AI agents begin to automate due diligence, risk monitoring, and regulatory tracking, the firms that deploy this infrastructure first will define the next decade of energy investment in Latin America."
+  },
+  {
+    "slug": "creaurbana-alerta-temprana",
+    "title": "When the Contract Works Against You",
+    "date": "2026-04-27",
+    "author": "Maria Agustina Colloca",
+    "category": "case-study",
+    "excerpt": "An early-warning model for contractual index mismatch in construction finance. How AI identified a $525M projected loss with less than 1% deviation from the actual outcome — using projected indices, not observed ones."
+  },
+  {
+    "slug": "wealth-management-inteligencia-adaptativa",
+    "title": "Are We Still the Same Investors We Were?",
+    "date": "2026-04-27",
+    "author": "Maria Agustina Colloca",
+    "category": "case-study",
+    "excerpt": "A financial and geopolitical intelligence model for dynamic portfolio evaluation in high-uncertainty environments. How to realign investment decisions when the world has fundamentally changed its rules."
+  }
+]
