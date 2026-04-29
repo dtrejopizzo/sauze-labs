@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Manual · Modelo CAC/UOCRA · SAUZE</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --s1:#F5EBE0;--s2:#E3D5CA;--s3:#C4CCBC;
+  --ink:#1A1F18;--muted:#4A5240;--faint:#8A9480;
+  --pos:#5C7A54;--pos-lt:#EAF0E8;
+  --neg:#8C3A22;--neg-lt:#F5E8E4;
+  --ale:#8C6020;--ale-lt:#F0E8D8;
+  --bg:#F5F6F2;--white:#FFFFFF;
+  --r:6px;
+  --max:780px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;font-size:14px;background:var(--bg);color:var(--ink);line-height:1.7}
+
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--s2);padding:0 32px;display:flex;align-items:center;height:52px;gap:14px}
+.tl{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:400;letter-spacing:.04em}
+.tl em{font-style:italic;color:var(--muted)}
+.tv{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--faint);border:1px solid var(--s3);padding:2px 8px;border-radius:3px}
+.tright{margin-left:auto;display:flex;gap:8px}
+.tnav{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);padding:3px 10px;border-radius:3px;border:1px solid var(--s2);background:var(--bg);cursor:pointer;text-decoration:none;transition:all .12s}
+.tnav:hover{background:var(--s2);color:var(--ink)}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+
+/* ── SIDENAV ── */
+.sidenav{position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;padding:24px 16px;border-right:1px solid var(--s2);background:var(--white)}
+.sn-lbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;padding-left:4px}
+.sn-item{display:block;padding:6px 8px;border-radius:4px;font-size:12px;color:var(--muted);text-decoration:none;margin-bottom:2px;transition:all .12s;border-left:2px solid transparent}
+.sn-item:hover{background:var(--bg);color:var(--ink)}
+.sn-item.active{color:var(--pos);border-left-color:var(--pos);background:var(--pos-lt)}
+.sn-num{font-family:'DM Mono',monospace;font-size:9px;margin-right:6px;color:var(--faint)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
+
+/* ── CONTENT ── */
+.content{padding:48px 60px 80px;max-width:900px}
+
+/* ── SECTIONS ── */
+.section{margin-bottom:64px;scroll-margin-top:72px}
+.section-num{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;line-height:1.2;margin-bottom:6px;letter-spacing:.01em}
+.section-lead{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--s2)}
+
+/* ── TYPOGRAPHY ── */
+h3{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;margin:28px 0 10px;color:var(--ink)}
+h4{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:22px 0 8px}
+p{margin-bottom:14px;color:var(--muted);line-height:1.75}
+p strong{color:var(--ink);font-weight:500}
+ul,ol{margin:0 0 14px 20px;color:var(--muted);line-height:1.75}
+li{margin-bottom:5px}
+li strong{color:var(--ink);font-weight:500}
+
+/* ── FORMULA BLOCK ── */
+.formula{background:var(--ink);color:#E3D5CA;padding:18px 22px;border-radius:var(--r);margin:20px 0;font-family:'DM Mono',monospace;font-size:13px;line-height:1.9;overflow-x:auto}
+.formula .comment{color:var(--faint);font-size:11px}
+.formula .key{color:#A8C5A0}
+.formula .val{color:#E8C4A0}
+
+/* ── CALLOUT ── */
+.callout{padding:14px 18px;border-radius:var(--r);border-left:3px solid;margin:20px 0;font-size:13px;line-height:1.7}
+.callout.inf{background:#EDF4FB;border-color:#3B8FD0;color:#1a3d5c}
+.callout.pos{background:var(--pos-lt);border-color:var(--pos);color:#1e3a1a}
+.callout.neg{background:var(--neg-lt);border-color:var(--neg);color:#5a1f10}
+.callout.ale{background:var(--ale-lt);border-color:var(--ale);color:#4a2e0a}
+.callout strong{font-weight:500}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.tbl th{padding:9px 14px;text-align:left;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);border-bottom:2px solid var(--s2);background:var(--bg)}
+.tbl td{padding:9px 14px;border-bottom:1px solid var(--s2);color:var(--muted)}
+.tbl td strong{color:var(--ink)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--bg)}
+.mono{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink)}
+.pos-t{color:var(--pos)}.neg-t{color:var(--neg)}.ale-t{color:var(--ale)}
+
+/* ── CARD ── */
+.card{background:var(--white);border:1px solid var(--s2);border-radius:var(--r);margin:16px 0;overflow:hidden}
+.card-head{padding:12px 18px;border-bottom:1px solid var(--s2);background:var(--bg);display:flex;align-items:center;gap:10px}
+.card-title{font-size:12px;font-weight:500}
+.card-body{padding:16px 18px}
+
+/* ── STEP ── */
+.steps{margin:16px 0}
+.step{display:flex;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--s2)}
+.step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--white);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;flex-shrink:0;margin-top:2px}
+.step-body h4{margin-top:0}
+.step-body p{margin-bottom:0}
+
+/* ── CASE ── */
+.case-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.case{border:1px solid var(--s2);border-radius:var(--r);padding:16px;background:var(--white)}
+.case-title{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);margin-bottom:8px}
+.case-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;margin-bottom:4px}
+.case-val.pos{color:var(--pos)}.case-val.neg{color:var(--neg)}
+.case-meta{font-size:11px;color:var(--muted);line-height:1.6}
+
+/* ── CHIP ── */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{font-family:'DM Mono',monospace;font-size:10px;padding:3px 10px;border-radius:99px;border:1px solid var(--s3);background:var(--bg);color:var(--muted)}
+.chip.pos{background:var(--pos-lt);border-color:var(--pos);color:var(--pos)}
+.chip.neg{background:var(--neg-lt);border-color:var(--neg);color:var(--neg)}
+.chip.ale{background:var(--ale-lt);border-color:var(--ale);color:var(--ale)}
+
+/* ── PA BAR ── */
+.pa-bar{height:8px;background:var(--s2);border-radius:4px;overflow:hidden;margin:8px 0}
+.pa-fill{height:100%;background:var(--neg);border-radius:4px}
+
+/* ── DIVIDER ── */
+.divider{border:none;border-top:1px solid var(--s2);margin:32px 0}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--s2);padding:24px 60px;display:flex;align-items:center;gap:16px;background:var(--white);font-size:11px;color:var(--faint)}
+footer span{font-family:'DM Mono',monospace}
+</style>
+<script>if(!sessionStorage.getItem('cu_auth')){window.location.replace('index.html');}</script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <span class="tl">SAUZE <em>Labs</em></span>
+  <span class="tv">Manual · CAC/UOCRA · v13</span>
+  <div class="tright">
+    <a class="tnav" href="#intro">Intro</a>
+    <a class="tnav" href="#problema">Problema</a>
+    <a class="tnav" href="#formula">Fórmula</a>
+    <a class="tnav" href="#parametros">Parámetros</a>
+    <a class="tnav" href="#macro">Macro</a>
+    <a class="tnav" href="#uocra">UOCRA</a>
+    <a class="tnav" href="#uso">Uso</a>
+    <a class="tnav" href="#validacion">Validación</a>
+    <a class="tnav" href="#glosario">Glosario</a>
+    <a class="tnav" href="app.html">← Volver a la App</a>
+    <button onclick="sessionStorage.removeItem('cu_auth');window.location.href='index.html'" class="tnav" style="cursor:pointer;border:1px solid var(--s2)">Salir</button>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- SIDENAV -->
+<nav class="sidenav">
+  <div class="sn-lbl">Contenidos</div>
+  <a class="sn-item active" href="#intro"><span class="sn-num">01</span>Introducción</a>
+  <a class="sn-item" href="#problema"><span class="sn-num">02</span>El problema</a>
+  <a class="sn-item" href="#formula"><span class="sn-num">03</span>Fórmula central</a>
+  <a class="sn-item" href="#parametros"><span class="sn-num">04</span>Parámetros</a>
+  <a class="sn-item" href="#macro"><span class="sn-num">05</span>Escenarios macro</a>
+  <a class="sn-item" href="#uocra"><span class="sn-num">06</span>Capa UOCRA</a>
+  <a class="sn-item" href="#curvas"><span class="sn-num">07</span>Curvas de avance</a>
+  <a class="sn-item" href="#uso"><span class="sn-num">08</span>Guía de uso</a>
+  <a class="sn-item" href="#validacion"><span class="sn-num">09</span>Validación empírica</a>
+  <a class="sn-item" href="#glosario"><span class="sn-num">10</span>Glosario</a>
+</nav>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- ══ 01 INTRO ══ -->
+<section class="section" id="intro">
+  <div class="section-num">01 — Introducción</div>
+  <div class="section-title">Modelo de análisis del descalce CAC/UOCRA en contratos de subcontratación</div>
+  <div class="section-lead">Herramienta de proyección financiera para cuantificar el riesgo de descalce entre los índices que ajustan ingresos (CAC GRL) y costos de mano de obra (UOCRA) en contratos de albañilería con subcontratistas.</div>
+
+  <h3>¿Qué hace el modelo?</h3>
+  <p>Cuando Creaurbana firma un contrato con un subcontratista de albañilería, el monto se ajusta periódicamente usando el <strong>índice CAC GRL</strong> (Cámara Argentina de la Construcción — Grandes Longitudes). El costo de mano de obra del subcontratista, por su parte, se ajusta según las <strong>paritarias UOCRA</strong> (Unión Obrera de la Construcción de la República Argentina).</p>
+  <p>Si ambos índices crecen al mismo ritmo, el margen del contrato se preserva. Si UOCRA crece más rápido que CAC, el subcontratista pierde margen. Si CAC crece más rápido que UOCRA, gana margen. El modelo cuantifica este diferencial mes a mes a lo largo de toda la obra.</p>
+
+  <div class="callout inf">
+    <strong>Alcance:</strong> El modelo proyecta el impacto económico del descalce de índices. No reemplaza el análisis legal del contrato ni contempla otros factores de costo como materiales, equipos o gastos generales.
+  </div>
+
+  <h3>Entregables que produce</h3>
+  <ul>
+    <li><strong>Impacto total ARS:</strong> ganancia o pérdida estimada en pesos corrientes</li>
+    <li><strong>Ratio CAC/UOCRA al cierre:</strong> cuántas veces vale el CAC en términos de UOCRA al finalizar el contrato</li>
+    <li><strong>Meses de exposición:</strong> cuántos meses UOCRA supera a CAC (riesgo activo)</li>
+    <li><strong>Detalle mensual:</strong> tabla con evolución mes a mes de ambos índices y el margen</li>
+    <li><strong>Comparación de hipótesis:</strong> hasta 3 escenarios simultáneos</li>
+  </ul>
+</section>
+
+<!-- ══ 02 PROBLEMA ══ -->
+<section class="section" id="problema">
+  <div class="section-num">02 — El problema del descalce</div>
+  <div class="section-title">Por qué CAC y UOCRA no crecen al mismo ritmo</div>
+  <div class="section-lead">El CAC GRL es un índice de costo de construcción que pondera materiales (≈45%) y mano de obra (≈55%). La UOCRA es exclusivamente mano de obra. Esta diferencia de composición genera el descalce.</div>
+
+  <h3>Estructura del CAC GRL</h3>
+  <p>El índice CAC Grande Longitudes refleja el costo de construcción de obras de gran escala. Su composición aproximada es:</p>
+  <ul>
+    <li><strong>≈45% materiales:</strong> acero, cemento, arena, ladrillo — insumos con precio influenciado por el tipo de cambio</li>
+    <li><strong>≈55% mano de obra:</strong> jornales de construcción, que siguen de cerca a la UOCRA</li>
+  </ul>
+
+  <h3>Por qué la mano de obra no refleja fielmente a la UOCRA</h3>
+  <p>El subcontratista de albañilería trabaja <strong>casi exclusivamente con mano de obra</strong> — no con materiales. Su estructura de costos es prácticamente 100% laboral. Cuando firma un contrato indexado por CAC, está expuesto a que la paritaria UOCRA supere al crecimiento del CAC, erosionando su margen.</p>
+
+  <div class="card">
+    <div class="card-head"><span class="card-title">Ejemplo esquemático</span></div>
+    <div class="card-body">
+      <table class="tbl">
+        <thead><tr><th>Concepto</th><th>CAC GRL</th><th>Subcontratista albañilería</th></tr></thead>
+        <tbody>
+          <tr><td>Materiales</td><td class="mono">≈45%</td><td class="mono pos-t">≈5%</td></tr>
+          <tr><td>Mano de obra</td><td class="mono">≈55%</td><td class="mono neg-t">≈95%</td></tr>
+          <tr><td>Ajuste de ingresos por</td><td><strong>CAC GRL</strong></td><td><em>Contrato — también CAC</em></td></tr>
+          <tr><td>Ajuste de costos por</td><td>—</td><td><strong>UOCRA (paritaria)</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="callout neg" style="margin-top:12px"><strong>El riesgo:</strong> si UOCRA sube más rápido que CAC, el subcontratista cobra un ajuste insuficiente para cubrir su suba de costos laborales.</div>
+    </div>
+  </div>
+
+  <h3>Magnitud histórica del problema</h3>
+  <p>En el período 2022–2023, la inflación se aceleró hasta superar el 200% anual. En ese contexto, la brecha entre el momento en que se ajustan los ingresos (CAC, periódico) y el momento en que se aplican los aumentos paritarios (UOCRA, según acuerdo) puede generar diferencias de decenas de millones de pesos en contratos medianos.</p>
+</section>
+
+<!-- ══ 03 FÓRMULA ══ -->
+<section class="section" id="formula">
+  <div class="section-num">03 — Fórmula central</div>
+  <div class="section-title">La matemática del descalce</div>
+  <div class="section-lead">El modelo calcula el margen financiero mes a mes como la diferencia entre la ganancia real del ajuste CAC y el costo real del ajuste UOCRA, ponderados por el avance de obra de ese mes.</div>
+
+  <h3>Variables fundamentales</h3>
+  <p>Para cada mes <em>m</em> del contrato se calculan dos factores sobre el valor inicial de la obra:</p>
+
+  <div class="formula">
+<span class="comment">// Factor CAC acumulado al mes m</span>
+<span class="key">cg_m</span> = (<span class="val">1 + ca</span>) ^ (m / 12)            <span class="comment">// año 1</span>
+<span class="key">cg_m</span> = cg_eoy1 × (<span class="val">1 + ca2</span>) ^ ((m-12) / 12) <span class="comment">// año 2</span>
+
+<span class="comment">// Factor UOCRA acumulado al mes m (basado en tramos paritarios)</span>
+<span class="key">ug_m</span> = cf1[calM]              <span class="comment">// año 1 — calM = mes calendario</span>
+<span class="key">ug_m</span> = ug_eoy1 × cf2[calM]    <span class="comment">// año 2</span>
+
+<span class="comment">// Margen del mes m</span>
+<span class="key">Y_m</span> = avance_m × (cg_m - 1)  <span class="comment">// ganancia por ajuste CAC</span>
+<span class="key">Z_m</span> = avance_m × (ug_m - 1)  <span class="comment">// costo por ajuste UOCRA</span>
+<span class="key">margen_m</span> = Y_m - Z_m
+  </div>
+
+  <h3>Impacto total del contrato</h3>
+  <div class="formula">
+<span class="key">impacto</span> = Σ margen_m   (m = 1 ... eff)
+
+<span class="comment">// Convención de signos:</span>
+<span class="comment">// impacto &lt; 0  →  CAC creció más que UOCRA  →  GANANCIA  →  se muestra +$XXM</span>
+<span class="comment">// impacto &gt; 0  →  UOCRA creció más que CAC  →  PÉRDIDA   →  se muestra −$XXM</span>
+  </div>
+
+  <h3>Cálculo del mes calendario</h3>
+  <p>La UOCRA ajusta por tramos en meses fijos del calendario (enero, abril, julio, octubre para 4 tramos). El modelo necesita conocer en qué mes calendario cae cada mes de obra, lo que depende del mes de firma:</p>
+
+  <div class="formula">
+<span class="key">calM</span> = (firma - 1 + i) % 12   <span class="comment">// 0-indexado: 0=Ene, 1=Feb, ..., 11=Dic</span>
+<span class="comment">// firma: mes de firma del contrato (1=Ene, 4=Abr, 12=Dic)</span>
+<span class="comment">// i: índice del mes de obra (0, 1, 2, ...)</span>
+  </div>
+
+  <div class="callout ale">
+    <strong>Detalle crítico:</strong> el mes calendario determina qué tramos paritarios ya se aplicaron al salario. Dos contratos idénticos firmados en meses distintos tienen estructuras de costo completamente diferentes porque "caen" en distintos tramos.
+  </div>
+</section>
+
+<!-- ══ 04 PARÁMETROS ══ -->
+<section class="section" id="parametros">
+  <div class="section-num">04 — Parámetros de entrada</div>
+  <div class="section-title">Qué datos ingresar y cómo obtenerlos</div>
+  <div class="section-lead">El modelo requiere cuatro datos del contrato y configura automáticamente los supuestos macroeconómicos según el año y mes de firma.</div>
+
+  <table class="tbl">
+    <thead><tr><th>Parámetro</th><th>Descripción</th><th>Fuente</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Monto ARS</strong></td><td>Valor total del contrato en pesos al momento de firma</td><td>Contrato</td><td class="mono">$1.719.435.162</td></tr>
+      <tr><td><strong>Duración (meses)</strong></td><td>Plazo de ejecución contractual</td><td>Contrato</td><td class="mono">21 meses</td></tr>
+      <tr><td><strong>CAC base</strong></td><td>Valor del índice CAC GRL al mes de firma</td><td>CAMARCO / INDEC</td><td class="mono">3.228,5</td></tr>
+      <tr><td><strong>UOCRA base</strong></td><td>Valor del jornal UOCRA al mes de firma</td><td>UOCRA / convención</td><td class="mono">809</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout inf">
+    <strong>¿Dónde consultar los índices?</strong> El CAC GRL se publica mensualmente en el sitio de CAMARCO (camarco.org.ar) y en la sección de estadísticas del INDEC. El jornal UOCRA se actualiza con cada acuerdo paritario y puede verificarse en el sitio de UOCRA o en las circulares de la Cámara.
+  </div>
+
+  <h3>Año y mes de firma</h3>
+  <p>El modelo selecciona automáticamente las proyecciones del REM (Relevamiento de Expectativas de Mercado del BCRA) correspondientes al período de firma. Esto determina los valores de IPC proyectado y factor de tipo de cambio usados en el cálculo del CAC.</p>
+</section>
+
+<!-- ══ 05 MACRO ══ -->
+<section class="section" id="macro">
+  <div class="section-num">05 — Escenarios macroeconómicos</div>
+  <div class="section-title">Cómo el modelo proyecta la evolución del CAC</div>
+  <div class="section-lead">El CAC GRL tiene dos componentes con dinámicas distintas: materiales (influenciados por el tipo de cambio) y mano de obra (influenciada por la inflación y la paritaria). El modelo los trata por separado.</div>
+
+  <h3>La fórmula del CAC proyectado</h3>
+  <div class="formula">
+<span class="key">ca</span> = IPC × (0.45 × TC_factor + 0.55 × FU)
+
+<span class="comment">// IPC:       inflación anual proyectada (ajustada por sensibilidad)</span>
+<span class="comment">// 0.45:      peso de materiales en el CAC</span>
+<span class="comment">// TC_factor: multiplicador del TC relativo al IPC</span>
+<span class="comment">// 0.55:      peso de mano de obra en el CAC</span>
+<span class="comment">// FU:        factor de recuperación UOCRA seleccionado</span>
+  </div>
+
+  <h3>Sensibilidad IPC (multiplicador del escenario base)</h3>
+  <table class="tbl">
+    <thead><tr><th>Opción</th><th>Multiplicador</th><th>Interpretación</th></tr></thead>
+    <tbody>
+      <tr><td class="pos-t">🟢 Optimista</td><td class="mono">×0.65</td><td>Inflación cae más rápido de lo proyectado por el REM</td></tr>
+      <tr><td class="ale-t">🟡 Base</td><td class="mono">×1.00</td><td>Inflación exactamente según proyecciones del REM-BCRA</td></tr>
+      <tr><td class="neg-t">🟠 Pesimista</td><td class="mono">×1.20</td><td>Inflación supera las proyecciones del REM en un 20%</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Régimen cambiario (TC_factor)</h3>
+  <p>El tipo de cambio afecta el precio de los materiales de construcción importados. El modelo permite tres regímenes:</p>
+  <table class="tbl">
+    <thead><tr><th>Opción</th><th>TC_factor</th><th>Interpretación</th><th>Cuándo usar</th></tr></thead>
+    <tbody>
+      <tr><td>🔵 REM (TC&lt;IPC)</td><td class="mono">ftc del REM<br>ej. 0.70× / 1.74×</td><td>TC crece <em>menos</em> que IPC → materiales se abaratan en términos reales</td><td>Crawling peg 2024-2025. Para 2023 el REM ya incorpora la devaluación (ftc=1.74×)</td></tr>
+      <tr><td>🟡 Neutro (TC=IPC)</td><td class="mono">1.00×</td><td>TC sigue exactamente a la inflación → sin efecto real</td><td>Caso base neutral, escenario de referencia</td></tr>
+      <tr><td>🔴 Devaluación (TC&gt;IPC)</td><td class="mono">1.30×</td><td>TC crece <em>más</em> que IPC → materiales se encarecen en términos reales</td><td>Anticipar salto cambiario no contemplado en el REM</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout ale">
+    <strong>Atención:</strong> TC=Neutro (factor=1.00) con Factor UOCRA mayor a 1.00 genera <em>siempre</em> pérdida. Esto es matemáticamente correcto: si el tipo de cambio no da ventaja a los materiales, y la UOCRA crece más rápido que el IPC puro, el CAC no puede superar a la UOCRA. Usar TC=Neutro solo como caso base, no como escenario realista.
+  </div>
+
+  <h3>Proyecciones REM precargadas por período</h3>
+  <p>El modelo tiene precargados los datos del REM-BCRA para cada mes de 2023 a 2025. Los valores reflejan las medianas de expectativas del mercado al momento de cada relevamiento.</p>
+  <table class="tbl">
+    <thead><tr><th>Período</th><th>IPC Año 1</th><th>fTC Año 1</th><th>Nota</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">2023 (Ene-Jun)</td><td class="mono">209%</td><td class="mono">1.74×</td><td>Pre-devaluación. Alto IPC y fuerte devaluación dic-23 ya incorporada</td></tr>
+      <tr><td class="mono">2023 (Jul-Nov)</td><td class="mono">209% → 185%</td><td class="mono">1.52× → 1.10×</td><td>Transición — ftc se normaliza hacia el crawling</td></tr>
+      <tr><td class="mono">2024 (Ene-Mar)</td><td class="mono">185%</td><td class="mono">0.70×</td><td>REM post-shock. Crawling peg establecido</td></tr>
+      <tr><td class="mono">2024 (Abr-Sep)</td><td class="mono">150% → 120%</td><td class="mono">0.60× → 0.61×</td><td>Desaceleración progresiva. Desinflación Milei</td></tr>
+      <tr><td class="mono">2024 (Oct-Dic)</td><td class="mono">95%</td><td class="mono">0.66×</td><td>Inflación convergiendo a niveles mensuales bajos</td></tr>
+      <tr><td class="mono">2025</td><td class="mono">65%</td><td class="mono">0.70×</td><td>Proyección conservadora. Crawling peg continúa</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══ 06 UOCRA ══ -->
+<section class="section" id="uocra">
+  <div class="section-num">06 — Capa sindical UOCRA</div>
+  <div class="section-title">Poder adquisitivo, paritarias y factores de ajuste</div>
+  <div class="section-lead">La proyección de la UOCRA es la variable más sensible del modelo. Depende del poder adquisitivo acumulado del gremio, del contexto político y del régimen de negociación de cada año.</div>
+
+  <h3>El poder adquisitivo (PA) como ancla de la proyección</h3>
+  <p>El modelo calcula el poder adquisitivo acumulado de la UOCRA desde 2013 comparando el aumento salarial anual con la inflación de cada año:</p>
+
+  <div class="formula">
+<span class="key">PA_acumulado</span> = Π (UOCRA_anual% / IPC_anual%)   para t = 2014 ... 2025
+  </div>
+
+  <p>Un PA de 0.28 significa que el salario real de un trabajador de la construcción es un 72% menor que en 2013. Este atraso genera presión estructural para recuperaciones agresivas.</p>
+
+  <div class="card">
+    <div class="card-head"><span class="card-title">Evolución del PA UOCRA 2014–2025</span></div>
+    <div class="card-body">
+      <table class="tbl">
+        <thead><tr><th>Año</th><th>UOCRA%</th><th>IPC%</th><th>Ratio</th><th>PA acumulado</th></tr></thead>
+        <tbody>
+          <tr><td>2014</td><td class="mono">30%</td><td class="mono">38%</td><td class="mono neg-t">0.79×</td><td class="mono">0.789</td></tr>
+          <tr><td>2018</td><td class="mono">25%</td><td class="mono">47.6%</td><td class="mono neg-t">0.53×</td><td class="mono neg-t">0.545</td></tr>
+          <tr><td>2022</td><td class="mono">105%</td><td class="mono">94.8%</td><td class="mono pos-t">1.11×</td><td class="mono">0.493</td></tr>
+          <tr><td>2023</td><td class="mono">260%</td><td class="mono">211.4%</td><td class="mono pos-t">1.23×</td><td class="mono ale-t">0.607</td></tr>
+          <tr><td>2024</td><td class="mono">145%</td><td class="mono">118%</td><td class="mono pos-t">1.23×</td><td class="mono ale-t">0.745</td></tr>
+          <tr><td>2025</td><td class="mono">22%</td><td class="mono">30%</td><td class="mono neg-t">0.73×</td><td class="mono neg-t">~0.54</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3>Factor de recuperación UOCRA (FU)</h3>
+  <p>El FU proyecta cuánto crecerá la UOCRA en relación al IPC. Un FU mayor a 1.00 significa que la UOCRA crece más rápido que la inflación (recuperación real). El nivel de FU recomendado depende del atraso acumulado:</p>
+
+  <table class="tbl">
+    <thead><tr><th>Nivel PA</th><th>Atraso acum.</th><th>FU Moderado</th><th>FU Normal</th><th>FU Agresivo</th><th>P(Agresivo)</th></tr></thead>
+    <tbody>
+      <tr><td class="pos-t">Bajo</td><td class="mono">&lt;10%</td><td class="mono">×0.80</td><td class="mono">×0.90</td><td class="mono">×1.05</td><td class="mono pos-t">Muy baja</td></tr>
+      <tr><td class="ale-t">Moderado</td><td class="mono">10–25%</td><td class="mono">×0.85</td><td class="mono">×0.95</td><td class="mono">×1.10</td><td class="mono ale-t">Baja</td></tr>
+      <tr><td class="neg-t">Alto</td><td class="mono">25–45%</td><td class="mono">×0.85</td><td class="mono">×1.00</td><td class="mono">×1.20</td><td class="mono ale-t">Media</td></tr>
+      <tr><td class="neg-t" style="font-weight:500">Severo</td><td class="mono neg-t">&gt;45%</td><td class="mono">×0.85</td><td class="mono">×1.00</td><td class="mono neg-t">×1.25</td><td class="mono neg-t">Alta</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tramos paritarios</h3>
+  <p>La UOCRA no ajusta todos los meses, sino en tramos definidos en la negociación. El modelo permite 4 configuraciones según el número de tramos anuales:</p>
+  <table class="tbl">
+    <thead><tr><th>Tramos</th><th>Meses de ajuste</th><th>Ponderaciones</th><th>Contexto típico</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">2 tramos</td><td>Abr / Oct</td><td>50% / 50%</td><td>Acuerdos semestrales. Inflación baja-moderada</td></tr>
+      <tr><td class="mono">3 tramos</td><td>Abr / Jul / Oct</td><td>33% / 33% / 33%</td><td>Acuerdos cuatrimestrales</td></tr>
+      <tr><td class="mono">4 tramos</td><td>Ene / Abr / Jul / Oct</td><td>40% / 30% / 20% / 10%</td><td>Acuerdo típico 2024. Mayor peso en tramos iniciales</td></tr>
+      <tr><td class="mono">Mensual</td><td>Todos los meses</td><td>Variable</td><td>2023 (ajuste discrecional). Catch-up máximo</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Paritarias acordadas (acuerdo formal)</h3>
+  <p>Cuando existe un acuerdo paritario homologado al momento de la firma del contrato, el modelo puede usar los porcentajes y meses reales en lugar de proyectar. Esto es relevante si los tramos ya fueron negociados pero aún no aplicados al salario.</p>
+  <div class="chips">
+    <span class="chip">2023: Sin acuerdo formal (ajustes discrecionales)</span>
+    <span class="chip ale">2024: Homologado — 4 tramos ≈40% acumulado</span>
+    <span class="chip ale">2025: Bimestral — 6 tramos ≈25% acumulado</span>
+  </div>
+</section>
+
+<!-- ══ 07 CURVAS ══ -->
+<section class="section" id="curvas">
+  <div class="section-num">07 — Curvas de avance de obra</div>
+  <div class="section-title">Cómo se distribuye el trabajo a lo largo del tiempo</div>
+  <div class="section-lead">El avance de obra determina qué porcentaje del contrato se ejecuta en cada mes. Una obra que avanza rápido al inicio tiene mayor exposición en los primeros meses; una que arranca lento la tiene en los últimos.</div>
+
+  <table class="tbl">
+    <thead><tr><th>Curva</th><th>Descripción</th><th>Duración efectiva</th><th>Cuándo usar</th></tr></thead>
+    <tbody>
+      <tr><td>🟢 Estándar</td><td>Curva S simétrica calibrada con datos históricos de construcción en Argentina</td><td>= Duración contractual</td><td>Caso base. Obra sin particularidades de timing</td></tr>
+      <tr><td>🟡 Atraso +3m</td><td>La curva estándar desplazada 3 meses hacia adelante. Los primeros 3 meses de obra son prácticamente nulos en avance</td><td>= Duración + 3 meses</td><td>Contratos que empezaron con demoras iniciales o que se firmaron antes del inicio real de obra. <strong>Clave para replicar el caso Abr-23</strong></td></tr>
+      <tr><td>🟠 Lenta ×1.25</td><td>El mismo avance total pero distribuido en un 25% más de tiempo</td><td>= Duración × 1.25</td><td>Obras con ejecución más lenta de lo estipulado en contrato</td></tr>
+      <tr><td>🔵 Referencia Creaurbana</td><td>Datos reales de avance de la cartera histórica de Creaurbana. Suavizados con spline cúbico</td><td>= Duración contractual</td><td>Contratos donde existe historial real de avance para ese tipo de obra</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout pos">
+    <strong>Normalización:</strong> independientemente de la curva elegida, el modelo normaliza el avance para que la suma total siempre sea igual al 100% del monto del contrato. La distribución importa; la suma no cambia.
+  </div>
+</section>
+
+<!-- ══ 08 USO ══ -->
+<section class="section" id="uso">
+  <div class="section-num">08 — Guía de uso</div>
+  <div class="section-title">Paso a paso para analizar un contrato</div>
+  <div class="section-lead">El flujo recomendado es ingresar los datos del contrato, configurar los supuestos macro, revisar la sugerencia de paritaria, y guardar hipótesis para comparar.</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Ingresar los datos del contrato</h4>
+        <p>En el panel <strong>Contrato → ① Datos</strong>: monto ARS, duración en meses, índice CAC y jornal UOCRA al momento de firma. Estos valores se obtienen del contrato físico y de las publicaciones de CAMARCO/UOCRA del mes de firma.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Seleccionar año y mes de firma</h4>
+        <p>El modelo carga automáticamente las proyecciones REM-BCRA del período correspondiente. El badge en el encabezado de la sección "Año 1" confirma qué datos se están usando. Verificar que correspondan al momento real de firma.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Revisar la sugerencia de paritaria</h4>
+        <p>El card <strong>Sugerencia UOCRA</strong> aparece automáticamente. Muestra el Factor UOCRA recomendado, el número de tramos, y la curva de avance sugerida, basados en el poder adquisitivo acumulado y el contexto político del año. El botón "Aplicar al modelo" carga todo de una vez.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Ajustar el escenario macro</h4>
+        <p>Configurar IPC (Optimista/Base/Pesimista) y Régimen Cambiario (REM/Neutro/Devaluación) según la hipótesis de trabajo. Para 2023 usar REM que ya incorpora ftc=1.74× (devaluación dic-23). Para 2024-2025 usar REM con crawling peg (ftc≈0.60-0.70×).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>Seleccionar la curva de avance</h4>
+        <p>Elegir entre Estándar, Atraso, Lenta o Referencia Creaurbana según las características de la obra. Para contratos con demoras iniciales, la curva Atraso +3m es la más representativa.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h4>Ir al panel Análisis para revisar el resultado</h4>
+        <p>El panel <strong>Análisis</strong> muestra el impacto total, el ratio CAC/UOCRA al cierre, los meses de exposición y el detalle mensual completo. El gráfico de margen acumulado permite ver en qué tramos se concentra el riesgo.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <h4>Guardar hipótesis y comparar</h4>
+        <p>Usando los botones <strong>Guardar A / B / C</strong> se pueden guardar hasta 3 configuraciones distintas. El panel <strong>Comparación</strong> muestra el contraste visual y tabular entre ellas — ideal para presentaciones ejecutivas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 09 VALIDACIÓN ══ -->
+<section class="section" id="validacion">
+  <div class="section-num">09 — Validación empírica</div>
+  <div class="section-title">Contratos reales de referencia</div>
+  <div class="section-lead">El modelo fue calibrado y validado contra dos contratos reales de Creaurbana con resultado económico conocido. El desvío promedio es inferior al 1%.</div>
+
+  <div class="case-grid">
+    <div class="case">
+      <div class="case-title">Caso 1 — Contrato ABR-23</div>
+      <div class="case-val pos">+$699M</div>
+      <div class="case-meta">
+        Monto: $1.719M · Duración: 21m · CAC: 3.228,5 · UOCRA: 809<br>
+        Escenario: Base + REM + Normal / Base + Neutro + Agresivo<br>
+        Curva: <strong>Atraso +3m</strong> · Tramos: 4/4<br>
+        Resultado real: +$702,8M · Desvío modelo: 0,5%
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-title">Caso 2 — Contrato DIC-23</div>
+      <div class="case-val neg">−$519M</div>
+      <div class="case-meta">
+        Monto: $868,9M · Duración: 26m · CAC: 9.049,8 · UOCRA: 1.602<br>
+        Escenario: Optimista + REM + Agresivo<br>
+        Curva: <strong>Referencia Creaurbana</strong> · Tramos: 4/4<br>
+        Resultado real: −$521,7M · Desvío modelo: 0,4%
+      </div>
+    </div>
+  </div>
+
+  <div class="callout pos">
+    <strong>Metodología de validación:</strong> se utilizaron los índices reales publicados por CAMARCO e INDEC para cada mes del período de vigencia de cada contrato, junto con los aumentos paritarios reales acordados por UOCRA en ese período. Los valores del modelo coinciden con los cálculos realizados por el equipo financiero de SAUZE sobre los contratos físicos.
+  </div>
+
+  <h3>Interpretación del caso ABR-23</h3>
+  <p>La ganancia del contrato ABR-23 se explica principalmente por la <strong>devaluación de diciembre 2023</strong>. Los materiales de construcción se encarecieron en términos de peso porque están dolarizados, empujando el CAC muy por encima de la paritaria UOCRA del período. El subcontratista cobró ajustes muy superiores a su suba de costo laboral durante los primeros 12 meses del contrato.</p>
+
+  <h3>Interpretación del caso DIC-23</h3>
+  <p>El contrato firmado en diciembre 2023 sufre el efecto inverso: el contrato ya incorporó el salto cambiario en su base CAC (9.049 vs 3.228 del caso anterior). A partir de 2024, con el crawling peg controlado, el CAC crece más lentamente que la paritaria UOCRA, que acumuló +145% ese año contra un IPC del 118% — recuperando parte del poder adquisitivo perdido.</p>
+</section>
+
+<!-- ══ 10 GLOSARIO ══ -->
+<section class="section" id="glosario">
+  <div class="section-num">10 — Glosario</div>
+  <div class="section-title">Términos y siglas del modelo</div>
+  <div class="section-lead">Definiciones de los términos técnicos usados en la interfaz y en este manual.</div>
+
+  <table class="tbl">
+    <thead><tr><th>Término</th><th>Definición</th></tr></thead>
+    <tbody>
+      <tr><td><strong>CAC GRL</strong></td><td>Índice de Costo de la Construcción — Grandes Longitudes, publicado mensualmente por la Cámara Argentina de la Construcción (CAMARCO). Compuesto por materiales (≈45%) y mano de obra (≈55%).</td></tr>
+      <tr><td><strong>UOCRA</strong></td><td>Unión Obrera de la Construcción de la República Argentina. El jornal UOCRA es el salario básico de convenio que se ajusta por paritaria, típicamente 2-4 veces por año.</td></tr>
+      <tr><td><strong>Descalce</strong></td><td>Diferencia entre el crecimiento del CAC (que ajusta los ingresos del subcontratista) y el crecimiento de la UOCRA (que ajusta sus costos). Un descalce positivo (CAC > UOCRA) genera ganancia; uno negativo, pérdida.</td></tr>
+      <tr><td><strong>PA (Poder Adquisitivo)</strong></td><td>Índice acumulado del salario real UOCRA relativo a 2013. Se calcula como el producto de los ratios UOCRA/IPC anuales. PA < 1 indica atraso salarial real acumulado.</td></tr>
+      <tr><td><strong>FU (Factor UOCRA)</strong></td><td>Multiplicador que indica cuántas veces el IPC proyectado crece la UOCRA. FU > 1 = recuperación real. FU < 1 = pérdida real adicional.</td></tr>
+      <tr><td><strong>REM</strong></td><td>Relevamiento de Expectativas de Mercado, encuesta del BCRA a bancos y consultoras sobre proyecciones macroeconómicas. Fuente de las proyecciones de IPC y tipo de cambio usadas en el modelo.</td></tr>
+      <tr><td><strong>fTC</strong></td><td>Factor de tipo de cambio relativo al IPC. fTC < 1 = tipo de cambio crece menos que la inflación (apreciación real). fTC > 1 = devaluación real.</td></tr>
+      <tr><td><strong>Curva S (Estándar)</strong></td><td>Distribución típica del avance de obra en construcción. Avance lento al inicio, aceleración en la mitad, desaceleración al cierre. Forma de "S" en un gráfico acumulado.</td></tr>
+      <tr><td><strong>Tramos paritarios</strong></td><td>Aumentos del jornal UOCRA distribuidos en fechas fijas a lo largo del año. La negociación paritaria define el porcentaje y la fecha de cada aumento.</td></tr>
+      <tr><td><strong>Paritaria homologada</strong></td><td>Acuerdo salarial aprobado formalmente por el Ministerio de Trabajo. Una vez homologado, los porcentajes y fechas son firmes y pueden cargarse directamente en el modelo.</td></tr>
+      <tr><td><strong>calM</strong></td><td>Mes calendario (0=Ene, 1=Feb, ..., 11=Dic) en que cae cada mes de obra, determinado por el mes de firma del contrato. Crítico para asignar correctamente los tramos paritarios.</td></tr>
+      <tr><td><strong>eff (duración efectiva)</strong></td><td>Duración real del cálculo según la curva de avance elegida. Puede ser mayor que la duración contractual (curva Atraso: dur+3, curva Lenta: dur×1.25).</td></tr>
+      <tr><td><strong>Hip. A / B / C</strong></td><td>Hipótesis guardadas en el módulo Comparación. Cada una representa una configuración completa del modelo (macro + curva + paritaria) que puede compararse visualmente.</td></tr>
+    </tbody>
+  </table>
+
+  <hr class="divider">
+
+  <div style="display:flex;align-items:center;gap:16px;padding:20px 0;font-size:11px;color:var(--faint)">
+    <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--muted)">SAUZE <em style="font-style:italic">Labs</em></span>
+    <span>Modelo CAC/UOCRA · v13 · Uso interno Creaurbana</span>
+    <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:9px">Elaborado por SAUZE · 2025</span>
+  </div>
+</section>
+
+</div><!-- /content -->
+</div><!-- /layout -->
+
+<script>
+// Scroll spy for sidenav
+const sections=document.querySelectorAll('.section');
+const navLinks=document.querySelectorAll('.sn-item');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(l=>l.classList.remove('active'));
+      const link=document.querySelector('.sn-item[href="#'+e.target.id+'"]');
+      if(link)link.classList.add('active');
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>

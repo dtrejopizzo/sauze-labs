@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Creaurbana · Acceso</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --s1:#F5EBE0;--s2:#E3D5CA;--s3:#C4CCBC;
+  --ink:#1A1F18;--muted:#4A5240;--faint:#8A9480;
+  --pos:#5C7A54;--pos-lt:#EAF0E8;
+  --neg:#8C3A22;--neg-lt:#F5E8E4;
+  --bg:#F5F6F2;--white:#FFFFFF;
+  --r:6px;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--ink)}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh}
+
+.login-wrap{width:340px}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;letter-spacing:.06em;text-align:center;margin-bottom:4px}
+.login-sub{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);text-align:center;margin-bottom:28px}
+.login-card{background:var(--white);border:1px solid var(--s2);border-radius:var(--r);padding:24px}
+.f{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
+.f label{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.f input{padding:8px 10px;border:1px solid var(--s3);border-radius:5px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);outline:none;transition:border-color .12s;width:100%}
+.f input:focus{border-color:var(--pos);background:var(--white)}
+.login-btn{width:100%;padding:9px;background:var(--pos);color:var(--white);border:none;border-radius:5px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:background .12s}
+.login-btn:hover{background:#4a6843}
+.login-err{font-family:'DM Mono',monospace;font-size:9px;color:var(--neg);text-align:center;margin-top:10px;min-height:14px}
+.login-footer{text-align:center;margin-top:18px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;color:var(--faint)}
+</style>
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="login-logo">Creaurbana</div>
+  <div class="login-sub">Análisis de Contratos · CAC/UOCRA</div>
+
+  <div class="login-card">
+    <div class="f">
+      <label>Usuario</label>
+      <input type="text" id="usr" autocomplete="username" placeholder="usuario">
+    </div>
+    <div class="f">
+      <label>Contraseña</label>
+      <input type="password" id="pwd" autocomplete="current-password" placeholder="contraseña">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Ingresar</button>
+    <div class="login-err" id="err"></div>
+  </div>
+
+  <div class="login-footer">by SAUZE Labs · uso interno</div>
+</div>
+
+<script>
+document.addEventListener('keydown', function(e){
+  if(e.key==='Enter') doLogin();
+});
+
+function doLogin(){
+  const u=document.getElementById('usr').value.trim();
+  const p=document.getElementById('pwd').value;
+  if(u==='creaurbana'&&p==='123456'){
+    sessionStorage.setItem('cu_auth','1');
+    window.location.href='app.html';
+  } else {
+    document.getElementById('err').textContent='Usuario o contraseña incorrectos.';
+    document.getElementById('pwd').value='';
+    document.getElementById('pwd').focus();
+  }
+}
+</script>
+</body>
+</html>

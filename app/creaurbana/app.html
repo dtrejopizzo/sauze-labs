@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Creaurbana · Análisis de Contratos CAC/UOCRA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --s1:#F5EBE0;--s2:#E3D5CA;--s3:#C4CCBC;
+  --ink:#1A1F18;--muted:#4A5240;--faint:#8A9480;
+  --pos:#5C7A54;--pos-lt:#EAF0E8;
+  --neg:#8C3A22;--neg-lt:#F5E8E4;
+  --ale:#8C6020;--ale-lt:#F0E8D8;
+  --bg:#F5F6F2;--white:#FFFFFF;
+  --r:6px;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--bg);color:var(--ink)}
+
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;background:var(--white);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .5s}
+#splash.hide{opacity:0;pointer-events:none}
+.splash-logo{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;letter-spacing:.08em;color:var(--ink)}
+.splash-sub{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.splash-line{width:48px;height:1px;background:var(--s3)}
+.splash-tool{font-family:'DM Mono',monospace;font-size:10px;color:var(--faint)}
+.splash-bar-wrap{width:200px;height:2px;background:var(--s2);border-radius:1px;overflow:hidden}
+.splash-bar{height:100%;background:var(--pos);border-radius:1px;width:0;animation:load 1.2s ease forwards}
+@keyframes load{to{width:100%}}
+
+/* ── APP SHELL ── */
+.app{display:grid;grid-template-rows:56px 1fr;grid-template-columns:260px 1fr;height:100vh;overflow:hidden}
+
+/* ── TOPBAR ── */
+.topbar{grid-column:1/-1;display:flex;align-items:center;padding:0 20px;background:var(--white);border-bottom:1px solid var(--s2);gap:14px;z-index:10}
+.brand{display:flex;flex-direction:column;line-height:1}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:400;letter-spacing:.04em}
+.brand-tool{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--faint)}
+.topbar-sep{width:1px;height:24px;background:var(--s2)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.badge{font-family:'DM Mono',monospace;font-size:9px;padding:3px 10px;border-radius:99px;border:1px solid var(--s3);color:var(--muted);background:var(--bg)}
+.badge.hi{background:var(--pos-lt);border-color:var(--pos);color:var(--pos)}
+.badge.lo{background:var(--neg-lt);border-color:var(--neg);color:var(--neg)}
+.powered{font-family:'DM Mono',monospace;font-size:8px;color:var(--faint);border:1px solid var(--s2);padding:2px 8px;border-radius:3px}
+
+/* ── SIDEBAR ── */
+.sidebar{background:var(--white);border-right:1px solid var(--s2);overflow-y:auto;display:flex;flex-direction:column}
+.nav-section{padding:14px 12px 6px}
+.nav-lbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;padding-left:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r);cursor:pointer;color:var(--muted);font-size:12px;margin-bottom:2px;border:1px solid transparent;transition:all .12s;user-select:none}
+.nav-item:hover{background:var(--bg);color:var(--ink)}
+.nav-item.active{background:var(--pos-lt);color:var(--pos);border-color:rgba(92,122,84,.18);font-weight:500}
+.nav-icon{font-size:15px;width:26px;text-align:center;flex-shrink:0}
+.sb-divider{border:none;border-top:1px solid var(--s2);margin:10px 14px}
+.sb-summary{padding:12px 16px;flex:1}
+.sb-section-lbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+.sb-impact-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;line-height:1.1;margin-bottom:2px}
+.sb-impact-lbl{font-size:10px;color:var(--muted);margin-bottom:14px}
+.sb-impact-val.pos{color:var(--pos)}.sb-impact-val.neg{color:var(--neg)}
+.sb-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--s2);font-size:11px}
+.sb-row:last-child{border-bottom:none}
+.sb-k{color:var(--faint)}
+.sb-v{font-family:'DM Mono',monospace;font-size:10px}
+.sb-v.pos{color:var(--pos)}.sb-v.neg{color:var(--neg)}.sb-v.ale{color:var(--ale)}
+
+/* ── MAIN ── */
+.main{overflow-y:auto;display:flex;flex-direction:column}
+.panel{display:none;padding:20px 22px;animation:fi .18s ease}
+.panel.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.ph{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;margin-bottom:3px;letter-spacing:.02em}
+.ps{font-size:11px;color:var(--muted);margin-bottom:18px;line-height:1.5}
+
+/* ── CARDS ── */
+.card{background:var(--white);border:1px solid var(--s2);border-radius:var(--r);margin-bottom:13px}
+.ch{padding:10px 16px;border-bottom:1px solid var(--s2);display:flex;align-items:center;gap:10px}
+.ch-t{font-size:12px;font-weight:500}
+.ch-s{font-size:10px;color:var(--muted);margin-left:auto;font-family:'DM Mono',monospace}
+.cb{padding:16px}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* ── FORM ── */
+.f{display:flex;flex-direction:column;gap:4px}
+.f label{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.f input{padding:7px 10px;border:1px solid var(--s3);border-radius:5px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);outline:none;transition:border-color .12s;width:100%}
+.f input:focus{border-color:var(--pos);background:var(--white)}
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+
+/* ── BUTTONS ── */
+.bg{display:flex;flex-wrap:wrap;gap:5px}
+.btn{padding:6px 11px;border-radius:5px;border:1px solid var(--s3);background:var(--white);color:var(--muted);font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .12s;white-space:nowrap;user-select:none}
+.btn:hover{background:var(--bg);color:var(--ink)}
+.btn.on{background:var(--s2);border-color:var(--ink);color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+
+/* Month buttons */
+.mg{display:flex;flex-wrap:wrap;gap:4px}
+.mb{padding:5px 8px;border-radius:4px;border:1px solid var(--s3);background:var(--white);color:var(--muted);font-size:10px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .12s;user-select:none}
+.mb.on{background:var(--s2);border-color:var(--ink);color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+
+/* Anno buttons */
+.anno-group{display:flex;gap:5px}
+.ab2{padding:5px 15px;border-radius:5px;border:1px solid var(--s3);background:var(--white);color:var(--muted);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .12s;user-select:none}
+.ab2.on{background:var(--s2);border-color:var(--ink);color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+.rem-badge{margin-left:auto;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);background:var(--s2);padding:2px 9px;border-radius:3px;border:1px solid var(--s3)}
+
+/* Avance */
+.av-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--s3);border:1px solid var(--s3);border-radius:5px;overflow:hidden}
+.avb{padding:9px 4px;background:var(--white);border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:9px;color:var(--ink);text-align:center;transition:background .12s;user-select:none}
+.avb.on{background:var(--s2);box-shadow:inset 0 -2px 0 var(--ink)}
+.avb span{display:block;font-size:8px;color:var(--muted);margin-top:2px}
+
+/* Tramos */
+.tr-col{display:flex;flex-direction:column;gap:5px}
+.tr-lbl{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.tr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--s3);border:1px solid var(--s3);border-radius:4px;overflow:hidden}
+.trb{padding:8px 2px;background:var(--white);border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:8px;color:var(--ink);text-align:center;transition:background .12s;user-select:none}
+.trb .ts{display:block;font-size:7px;color:var(--muted);margin-top:1px}
+.trb.on{background:var(--s2);box-shadow:inset 0 -2px 0 var(--ink)}
+
+/* Timing bar */
+.timbar{display:flex;gap:1px;margin-top:10px;height:26px}
+.tc{flex:1;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:7px;background:var(--s2);color:var(--muted);border-radius:2px;transition:background .2s}
+.tc.firma{background:var(--ink);color:var(--white)}
+.tc.pari{background:var(--neg-lt);color:var(--neg);font-weight:500}
+
+/* Metrics */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:16px}
+.mc{background:var(--white);border:1px solid var(--s2);border-radius:var(--r);padding:14px}
+.mc-lbl{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);margin-bottom:6px}
+.mc-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;line-height:1;margin-bottom:3px}
+.mc-sub{font-size:10px;color:var(--muted)}
+.mc-val.pos{color:var(--pos)}.mc-val.neg{color:var(--neg)}.mc-val.ale{color:var(--ale)}
+
+/* Chart */
+.chart-wrap{position:relative;width:100%;height:210px}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{padding:8px 12px;text-align:left;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);border-bottom:1px solid var(--s2);white-space:nowrap}
+.tbl td{padding:7px 12px;border-bottom:1px solid var(--s2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--bg)}
+.mono{font-family:'DM Mono',monospace;font-size:10px}
+.pos{color:var(--pos)}.neg{color:var(--neg)}.ale{color:var(--ale)}
+
+/* Slots */
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:14px}
+.slot{border:1px solid var(--s2);border-radius:var(--r);padding:13px;background:var(--bg);min-height:76px;position:relative}
+.slot.filled{background:var(--white);border-color:var(--s3)}
+.slot-lbl{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);margin-bottom:5px}
+.slot-loss{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:3px}
+.slot-meta{font-size:10px;color:var(--muted);line-height:1.4}
+.slot-empty{display:flex;align-items:center;justify-content:center;height:46px;font-size:11px;color:var(--faint)}
+.slot-x{position:absolute;top:8px;right:10px;border:none;background:none;cursor:pointer;color:var(--faint);font-size:15px;line-height:1}
+.slot-x:hover{color:var(--neg)}
+
+/* Acordado card */
+.acord-card{border:1px solid var(--s3);border-radius:var(--r);margin-bottom:13px;overflow:hidden}
+.acord-card.has-acuerdo{border-color:var(--ale)}
+.acord-card.sin-acuerdo{border-color:var(--pos)}
+.acord-head{padding:10px 16px;display:flex;align-items:center;gap:9px}
+.acord-head.has-acuerdo{background:var(--ale-lt)}
+.acord-head.sin-acuerdo{background:var(--pos-lt)}
+.acord-title{font-size:11px;font-weight:500}
+.acord-title.has-acuerdo{color:var(--ale)}
+.acord-title.sin-acuerdo{color:var(--pos)}
+.acord-body{padding:14px 16px;background:var(--white)}
+.acord-nota{font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:11px}
+.acord-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px}
+.acord-chip{font-family:'DM Mono',monospace;font-size:9px;padding:3px 10px;border-radius:3px;border:1px solid var(--ale);background:var(--ale-lt);color:var(--ale)}
+.acord-btns{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.acord-btn{padding:6px 14px;border-radius:4px;font-family:'DM Mono',monospace;font-size:9px;cursor:pointer;transition:all .12s;user-select:none}
+.acord-btn.primary{background:var(--ale);color:var(--white);border:none}
+.acord-btn.secondary{background:var(--white);color:var(--muted);border:1px solid var(--s3)}
+.acord-btn.primary.on{opacity:.55}
+.acord-status{font-family:'DM Mono',monospace;font-size:9px;color:var(--pos)}
+
+/* Sugerencia */
+.razon{border:1px solid var(--s2);border-radius:4px;margin-bottom:6px;overflow:hidden}
+.razon-head{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;background:var(--bg);user-select:none}
+.razon-head:hover{background:var(--s2)}
+.razon-icon{font-size:12px;flex-shrink:0}
+.razon-titulo{font-size:11px;font-weight:500;flex:1}
+.razon-arr{font-size:10px;color:var(--faint);transition:transform .15s}
+.razon-arr.open{transform:rotate(180deg)}
+.razon-body{display:none;padding:10px 12px;font-size:11px;line-height:1.7;color:var(--muted);background:var(--white);border-top:1px solid var(--s2)}
+.sug-box{padding:12px 14px;background:var(--pos-lt);border:1px solid var(--pos);border-radius:4px;margin-bottom:11px}
+.sug-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.sug-lbl{font-family:'DM Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.sug-val{font-size:12px;font-weight:500}
+.sug-chips{display:flex;gap:5px;flex-wrap:wrap}
+.sug-chip{font-family:'DM Mono',monospace;font-size:9px;padding:2px 8px;border:1px solid var(--s3);border-radius:3px;background:var(--white);color:var(--muted)}
+.apply-btn{padding:6px 16px;background:var(--pos);color:var(--white);border:none;border-radius:4px;font-family:'DM Mono',monospace;font-size:9px;cursor:pointer;margin-top:10px;display:inline-flex;align-items:center;gap:6px;user-select:none}
+.apply-btn:hover{background:#4a6843}
+.apply-status{font-family:'DM Mono',monospace;font-size:9px;color:var(--pos);margin-left:6px}
+
+/* Macro box */
+.macro-box{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);padding:7px 11px;background:var(--s2);border-radius:4px;margin-top:9px;line-height:1.9}
+.macro-box span{color:var(--ink)}
+
+/* Callout */
+.callout{padding:11px 16px;border-radius:var(--r);border-left:3px solid;margin-bottom:13px;font-size:11px;line-height:1.7}
+.callout.neg{background:var(--neg-lt);border-color:var(--neg);color:#5a1f10}
+.callout.pos{background:var(--pos-lt);border-color:var(--pos);color:#1e3a1a}
+.callout.ale{background:var(--ale-lt);border-color:var(--ale);color:#4a2e0a}
+
+/* Save buttons */
+.save-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:4px}
+
+/* PA bar */
+.pa-track{height:5px;background:var(--s2);border-radius:3px;overflow:hidden;margin:6px 0 4px}
+.pa-fill{height:100%;border-radius:3px}
+.pa-row{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:var(--faint)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* Print hint */
+@media print{#splash{display:none!important}.app{display:block!important}}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">Creaurbana</div>
+  <div class="splash-line"></div>
+  <div class="splash-sub">Análisis de Contratos</div>
+  <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
+  <div class="splash-tool">CAC GRL / UOCRA · Modelo de descalce de índices</div>
+</div>
+
+<div class="app">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-name">Creaurbana</span>
+    <span class="brand-tool">Análisis de Contratos · CAC/UOCRA</span>
+  </div>
+  <div class="topbar-sep"></div>
+  <div class="topbar-right">
+    <span class="badge" id="top-firma">—</span>
+    <span class="badge" id="top-rem">—</span>
+    <span class="badge" id="top-loss">—</span>
+    <span class="powered">by SAUZE</span>
+    <a href="manual.html" style="font-family:'DM Mono',monospace;font-size:9px;padding:3px 10px;border-radius:99px;border:1px solid var(--s3);color:var(--muted);background:var(--bg);text-decoration:none">Manual</a>
+    <button onclick="sessionStorage.removeItem('cu_auth');window.location.href='index.html'" style="font-family:'DM Mono',monospace;font-size:9px;padding:3px 10px;border-radius:99px;border:1px solid var(--s3);color:var(--muted);background:var(--bg);cursor:pointer">Salir</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="nav-section">
+    <div class="nav-lbl">Módulos</div>
+    <div class="nav-item active" data-panel="contrato" onclick="goPanel('contrato')">
+      <span class="nav-icon">📋</span>Contrato
+    </div>
+    <div class="nav-item" data-panel="analisis" onclick="goPanel('analisis')">
+      <span class="nav-icon">📊</span>Análisis
+    </div>
+    <div class="nav-item" data-panel="comparacion" onclick="goPanel('comparacion')">
+      <span class="nav-icon">⚖️</span>Comparación
+    </div>
+    <div class="nav-item" data-panel="supuestos" onclick="goPanel('supuestos')">
+      <span class="nav-icon">📚</span>Supuestos
+    </div>
+  </div>
+  <hr class="sb-divider">
+  <div class="sb-summary">
+    <div class="sb-section-lbl">Escenario activo</div>
+    <div class="sb-impact-val" id="sb-impact">—</div>
+    <div class="sb-impact-lbl" id="sb-impact-lbl">Impacto estimado</div>
+    <div class="sb-row"><span class="sb-k">Monto</span><span class="sb-v" id="sb-monto">—</span></div>
+    <div class="sb-row"><span class="sb-k">Duración eff.</span><span class="sb-v" id="sb-dur">—</span></div>
+    <div class="sb-row"><span class="sb-k">Ratio cierre</span><span class="sb-v" id="sb-ratio">—</span></div>
+    <div class="sb-row"><span class="sb-k">Meses exp.</span><span class="sb-v" id="sb-meses">—</span></div>
+    <div class="sb-row"><span class="sb-k">PA UOCRA</span><span class="sb-v neg" id="sb-pa">—</span></div>
+  </div>
+</div>
+
+<!-- ══ PANEL CONTRATO ══ -->
+<div class="panel active" id="panel-contrato">
+  <div class="ph">Configuración del contrato</div>
+  <div class="ps">Ingresá los datos del contrato · Seleccioná el escenario macroeconómico y paritario</div>
+
+  <div class="g2">
+    <!-- COLUMNA IZQUIERDA -->
+    <div>
+      <div class="card">
+        <div class="ch"><span class="ch-t">① Datos del contrato</span></div>
+        <div class="cb">
+          <div class="ig">
+            <div class="f"><label>Monto ARS</label><input type="number" id="inp-monto" value="870000000" step="1000000"></div>
+            <div class="f"><label>Duración (meses)</label><input type="number" id="inp-dur" value="26" min="6" max="48"></div>
+            <div class="f"><label>CAC base al momento de firma</label><input type="number" id="inp-cac" value="9049.8" step="0.1"></div>
+            <div class="f"><label>UOCRA base al momento de firma</label><input type="number" id="inp-uocra" value="1602" step="1"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch">
+          <span class="ch-t">② Mes y año de firma</span>
+          <span class="rem-badge" id="rem-badge">—</span>
+        </div>
+        <div class="cb">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Año:</span>
+            <div class="anno-group" id="anno-btns">
+              <button class="ab2" data-a="2023">2023</button>
+              <button class="ab2 on" data-a="2024">2024</button>
+              <button class="ab2" data-a="2025">2025</button>
+            </div>
+          </div>
+          <div class="mg" id="mes-btns">
+            <button class="mb" data-m="1">ENE</button><button class="mb" data-m="2">FEB</button>
+            <button class="mb" data-m="3">MAR</button><button class="mb" data-m="4">ABR</button>
+            <button class="mb" data-m="5">MAY</button><button class="mb" data-m="6">JUN</button>
+            <button class="mb" data-m="7">JUL</button><button class="mb" data-m="8">AGO</button>
+            <button class="mb" data-m="9">SEP</button><button class="mb" data-m="10">OCT</button>
+            <button class="mb" data-m="11">NOV</button><button class="mb on" data-m="12">DIC</button>
+          </div>
+          <div class="timbar" id="timbar"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><span class="ch-t">③ Curva de avance de obra</span></div>
+        <div class="cb">
+          <div class="av-grid" id="av-btns">
+            <button class="avb on" data-av="0">🟢 Estándar<span>Curva S calibrada</span></button>
+            <button class="avb" data-av="1">🟡 Atraso<span>+3 meses</span></button>
+            <button class="avb" data-av="2">🟠 Lenta<span>×1.25 duración</span></button>
+            <button class="avb" data-av="3">🔵 Referencia<span>Datos Creaurbana</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="save-btns">
+        <button class="btn" onclick="saveSlot(0)" style="background:var(--pos);color:#fff;border-color:var(--pos)">Guardar hipótesis A</button>
+        <button class="btn" onclick="saveSlot(1)" style="background:var(--ale);color:#fff;border-color:var(--ale)">Guardar hipótesis B</button>
+        <button class="btn" onclick="saveSlot(2)" style="background:var(--neg);color:#fff;border-color:var(--neg)">Guardar hipótesis C</button>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA -->
+    <div>
+      <div id="acord-wrap"></div>
+
+      <div class="card">
+        <div class="ch"><span class="ch-t">④ Escenario macro — Año 1</span><span class="ch-s" id="rem-yr1">—</span></div>
+        <div class="cb">
+          <div style="margin-bottom:12px">
+            <div class="f" style="gap:7px"><label>Sensibilidad IPC</label>
+              <div class="bg" id="mult1-btns">
+                <button class="btn on" data-v="opt">🟢 Optimista (×0.65)</button>
+                <button class="btn" data-v="base">🟡 Base (×1.00)</button>
+                <button class="btn" data-v="pes">🟠 Pesimista (×1.20)</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div class="f" style="gap:7px"><label>Régimen cambiario · REM=TC&lt;IPC · Neutro=TC=IPC · Devaluación=TC&gt;IPC</label>
+              <div class="bg" id="tc1-btns">
+                <button class="btn on" data-v="rem">🔵 REM (TC&lt;IPC)</button>
+                <button class="btn" data-v="neutral">🟡 Neutro (TC=IPC)</button>
+                <button class="btn" data-v="jump">🔴 Devaluación (TC&gt;IPC)</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="f" style="gap:7px"><label>Factor recuperación UOCRA</label>
+              <div class="bg" id="fu1-btns">
+                <button class="btn" data-v="mod">🟢 Moderado (×0.85)</button>
+                <button class="btn" data-v="norm">🟡 Normal (×1.00)</button>
+                <button class="btn on" data-v="agr">🔴 Agresivo (×1.25)</button>
+              </div>
+            </div>
+          </div>
+          <div class="macro-box" id="macro-yr1">—</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><span class="ch-t">⑤ Escenario macro — Año 2</span><span class="ch-s" id="rem-yr2">—</span></div>
+        <div class="cb">
+          <div style="margin-bottom:12px">
+            <div class="f" style="gap:7px"><label>Sensibilidad IPC</label>
+              <div class="bg" id="mult2-btns">
+                <button class="btn on" data-v="opt">🟢 Optimista (×0.65)</button>
+                <button class="btn" data-v="base">🟡 Base (×1.00)</button>
+                <button class="btn" data-v="pes">🟠 Pesimista (×1.20)</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div class="f" style="gap:7px"><label>Régimen cambiario</label>
+              <div class="bg" id="tc2-btns">
+                <button class="btn on" data-v="rem">🔵 REM (TC&lt;IPC)</button>
+                <button class="btn" data-v="neutral">🟡 Neutro (TC=IPC)</button>
+                <button class="btn" data-v="jump">🔴 Devaluación (TC&gt;IPC)</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="f" style="gap:7px"><label>Factor recuperación UOCRA</label>
+              <div class="bg" id="fu2-btns">
+                <button class="btn" data-v="mod">🟢 Moderado (×0.85)</button>
+                <button class="btn" data-v="norm">🟡 Normal (×1.00)</button>
+                <button class="btn on" data-v="agr">🔴 Agresivo (×1.25)</button>
+              </div>
+            </div>
+          </div>
+          <div class="macro-box" id="macro-yr2">—</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><span class="ch-t">⑥ Tramos paritarios por año</span></div>
+        <div class="cb">
+          <div class="g2">
+            <div class="tr-col">
+              <div class="tr-lbl">Año 1</div>
+              <div class="tr-grid" id="tr1-btns">
+                <button class="trb" data-v="2">2 tr<span class="ts">Abr/Oct</span></button>
+                <button class="trb" data-v="3">3 tr<span class="ts">A/J/O</span></button>
+                <button class="trb on" data-v="4">4 tr<span class="ts">E/A/J/O</span></button>
+                <button class="trb" data-v="12">Mens<span class="ts">Catch-up</span></button>
+              </div>
+            </div>
+            <div class="tr-col">
+              <div class="tr-lbl">Año 2</div>
+              <div class="tr-grid" id="tr2-btns">
+                <button class="trb" data-v="2">2 tr<span class="ts">Abr/Oct</span></button>
+                <button class="trb" data-v="3">3 tr<span class="ts">A/J/O</span></button>
+                <button class="trb on" data-v="4">4 tr<span class="ts">E/A/J/O</span></button>
+                <button class="trb" data-v="12">Mens<span class="ts">Catch-up</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL ANÁLISIS ══ -->
+<div class="panel" id="panel-analisis">
+  <div class="ph">Análisis mes a mes</div>
+  <div class="ps">Proyección del descalce entre CAC GRL y UOCRA durante la vigencia del contrato</div>
+  <div class="metrics">
+    <div class="mc"><div class="mc-lbl">Impacto total ARS</div><div class="mc-val" id="a-loss">—</div><div class="mc-sub" id="a-loss-s">—</div></div>
+    <div class="mc"><div class="mc-lbl">Ratio CAC/UOCRA al cierre</div><div class="mc-val" id="a-ratio">—</div><div class="mc-sub" id="a-ratio-s">—</div></div>
+    <div class="mc"><div class="mc-lbl">Meses con exposición</div><div class="mc-val" id="a-meses">—</div><div class="mc-sub">UOCRA &gt; CAC</div></div>
+    <div class="mc"><div class="mc-lbl">CAC Año1 / Año2</div><div class="mc-val" id="a-cac" style="font-size:16px">—</div><div class="mc-sub" id="a-uocra">—</div></div>
+  </div>
+  <div id="a-callout"></div>
+  <div class="g2" style="margin-bottom:13px">
+    <div class="card" style="margin-bottom:0">
+      <div class="ch"><span class="ch-t">Evolución CAC vs UOCRA (base 100)</span></div>
+      <div class="cb"><div class="chart-wrap"><canvas id="chart-evol"></canvas></div></div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="ch"><span class="ch-t">Margen acumulado ARS</span></div>
+      <div class="cb"><div class="chart-wrap"><canvas id="chart-margin"></canvas></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ch-t">Detalle mensual del descalce</span></div>
+    <div class="cb" style="padding:0;overflow-x:auto">
+      <table class="tbl" id="a-table">
+        <thead><tr><th>Mes</th><th>Cal.</th><th>Índice CAC</th><th>Índice UOCRA</th><th>Avance ARS</th><th>Y — CAC</th><th>Z — UOCRA</th><th>Margen</th><th>Acumulado</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL COMPARACIÓN ══ -->
+<div class="panel" id="panel-comparacion">
+  <div class="ph">Comparación de hipótesis</div>
+  <div class="ps">Compará hasta 3 escenarios guardados desde el módulo Contrato</div>
+  <div class="slots" id="slots-ui"></div>
+  <div class="g2" style="margin-bottom:13px">
+    <div class="card" style="margin-bottom:0">
+      <div class="ch"><span class="ch-t">Impacto por hipótesis</span></div>
+      <div class="cb"><div class="chart-wrap"><canvas id="cmp-bar"></canvas></div></div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="ch"><span class="ch-t">Margen acumulado comparado</span></div>
+      <div class="cb"><div class="chart-wrap"><canvas id="cmp-lines"></canvas></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ch-t">Tabla comparativa</span></div>
+    <div class="cb" style="padding:0;overflow-x:auto">
+      <table class="tbl" id="cmp-table">
+        <thead><tr><th>Hip.</th><th>Curva avance</th><th>FU Año 1</th><th>FU Año 2</th><th>CAC Año 1</th><th>UOCRA Año 1</th><th>Impacto</th><th>Ratio cierre</th><th>Meses exp.</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL SUPUESTOS ══ -->
+<div class="panel" id="panel-supuestos">
+  <div class="ph">Supuestos del modelo</div>
+  <div class="ps">Base empírica · UOCRA · CAMARCO · INDEC · Series 2013–2025</div>
+
+  <div class="g2" style="margin-bottom:13px">
+    <div class="card" style="margin-bottom:0">
+      <div class="ch"><span class="ch-t">Ratio UOCRA/IPC anual (2014–2025)</span></div>
+      <div class="cb"><div class="chart-wrap"><canvas id="chart-hist"></canvas></div></div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="ch"><span class="ch-t">Poder adquisitivo acumulado UOCRA</span>
+        <span class="ch-s" id="pa-badge">—</span></div>
+      <div class="cb">
+        <div class="pa-track"><div class="pa-fill" id="pa-fill" style="background:var(--neg)"></div></div>
+        <div class="pa-row"><span id="pa-lo">—</span><span id="pa-hi">—</span></div>
+        <div style="height:10px"></div>
+        <div class="chart-wrap" style="height:150px"><canvas id="chart-pa"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><span class="ch-t">Factores de recuperación UOCRA calibrados</span></div>
+    <div class="cb" style="padding:0;overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>Nivel PA</th><th>Atraso acumulado</th><th>Factor Moderado</th><th>Factor Normal</th><th>Factor Agresivo</th><th>Probabilidad agresivo</th></tr></thead>
+        <tbody>
+          <tr><td class="pos">Bajo</td><td class="mono">&lt;10%</td><td class="mono">×0.80</td><td class="mono">×0.90</td><td class="mono">×1.05</td><td class="mono pos">Muy baja</td></tr>
+          <tr><td class="ale">Moderado</td><td class="mono">10–25%</td><td class="mono">×0.85</td><td class="mono">×0.95</td><td class="mono">×1.10</td><td class="mono ale">Baja</td></tr>
+          <tr><td class="neg">Alto</td><td class="mono">25–45%</td><td class="mono">×0.85</td><td class="mono">×1.00</td><td class="mono">×1.20</td><td class="mono ale">Media</td></tr>
+          <tr><td class="neg" style="font-weight:500">Severo</td><td class="mono neg">&gt;45%</td><td class="mono">×0.85</td><td class="mono">×1.00</td><td class="mono neg">×1.25</td><td class="mono neg">Alta — máx. hist.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><span class="ch-t">Proyecciones REM — BCRA por período de firma</span></div>
+    <div class="cb" style="padding:0;overflow-x:auto">
+      <table class="tbl" id="rem-table">
+        <thead><tr><th>Período</th><th>Fuente</th><th>IPC Año 1</th><th>fTC Año 1</th><th>IPC Año 2</th><th>fTC Año 2</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// Auth guard
+if(!sessionStorage.getItem('cu_auth')){window.location.replace('index.html');}
+
+// ════════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════════
+const MN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+const REM={
+  '2023-1':{ipc1:2.09,ftc1:1.74,ipc2:0.64,ftc2:0.44,lbl:'Real Ene-23'},
+  '2023-2':{ipc1:2.09,ftc1:1.74,ipc2:0.64,ftc2:0.44,lbl:'Real Feb-23'},
+  '2023-3':{ipc1:2.09,ftc1:1.74,ipc2:0.64,ftc2:0.44,lbl:'Real Mar-23'},
+  '2023-4':{ipc1:2.09,ftc1:1.74,ipc2:0.64,ftc2:0.44,lbl:'Real Abr-23'},
+  '2023-5':{ipc1:2.09,ftc1:1.74,ipc2:0.64,ftc2:0.44,lbl:'Real May-23'},
+  '2023-6':{ipc1:2.09,ftc1:1.74,ipc2:0.64,ftc2:0.44,lbl:'Real Jun-23'},
+  '2023-7':{ipc1:2.09,ftc1:1.52,ipc2:0.64,ftc2:0.44,lbl:'Real Jul-23'},
+  '2023-8':{ipc1:2.09,ftc1:1.52,ipc2:0.64,ftc2:0.44,lbl:'Real Ago-23'},
+  '2023-9':{ipc1:1.85,ftc1:1.40,ipc2:0.55,ftc2:0.50,lbl:'Real Sep-23'},
+  '2023-10':{ipc1:1.85,ftc1:1.20,ipc2:0.55,ftc2:0.50,lbl:'Real Oct-23'},
+  '2023-11':{ipc1:1.85,ftc1:1.10,ipc2:0.55,ftc2:0.50,lbl:'Real Nov-23'},
+  '2023-12':{ipc1:1.85,ftc1:0.70,ipc2:0.60,ftc2:0.78,lbl:'REM Dic-23'},
+  '2024-1':{ipc1:1.85,ftc1:0.70,ipc2:0.60,ftc2:0.78,lbl:'REM Ene-24'},
+  '2024-2':{ipc1:1.85,ftc1:0.70,ipc2:0.60,ftc2:0.78,lbl:'REM Feb-24'},
+  '2024-3':{ipc1:1.85,ftc1:0.70,ipc2:0.60,ftc2:0.78,lbl:'REM Mar-24'},
+  '2024-4':{ipc1:1.50,ftc1:0.60,ipc2:0.45,ftc2:0.83,lbl:'REM Abr-24'},
+  '2024-5':{ipc1:1.50,ftc1:0.60,ipc2:0.45,ftc2:0.83,lbl:'REM May-24'},
+  '2024-6':{ipc1:1.50,ftc1:0.60,ipc2:0.45,ftc2:0.83,lbl:'REM Jun-24'},
+  '2024-7':{ipc1:1.20,ftc1:0.61,ipc2:0.35,ftc2:0.86,lbl:'REM Jul-24'},
+  '2024-8':{ipc1:1.20,ftc1:0.61,ipc2:0.35,ftc2:0.86,lbl:'REM Ago-24'},
+  '2024-9':{ipc1:1.20,ftc1:0.61,ipc2:0.35,ftc2:0.86,lbl:'REM Sep-24'},
+  '2024-10':{ipc1:0.95,ftc1:0.66,ipc2:0.30,ftc2:0.88,lbl:'REM Oct-24'},
+  '2024-11':{ipc1:0.95,ftc1:0.66,ipc2:0.30,ftc2:0.88,lbl:'REM Nov-24'},
+  '2024-12':{ipc1:1.85,ftc1:0.70,ipc2:0.60,ftc2:0.78,lbl:'REM Dic-24'},
+  '2025-1':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-2':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-3':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-4':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-5':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-6':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-7':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-8':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-9':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-10':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-11':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+  '2025-12':{ipc1:0.65,ftc1:0.70,ipc2:0.28,ftc2:0.90,lbl:'Proj 2025'},
+};
+
+const MULT={opt:0.65,base:1.00,pes:1.20};
+const TC_MAP={rem:null,neutral:1.00,jump:1.30};
+const FU_MAP={mod:0.85,norm:1.00,agr:1.25};
+const FU_LBL={mod:'Moderado',norm:'Normal',agr:'Agresivo'};
+
+const PARI={
+  2:{months:[4,10],weights:[1,1]},
+  3:{months:[4,7,10],weights:[1,1,1]},
+  4:{months:[1,4,7,10],weights:[4,3,2,1]},
+  12:{months:[1,2,3,4,5,6,7,8,9,10,11,12],weights:[25,20,3,15,12,10,3,5,3,2,1,1]},
+};
+
+const PA_HIST=[
+  {y:2014,u:30,i:38},{y:2015,u:33,i:27},{y:2016,u:35,i:41},{y:2017,u:26,i:24.8},
+  {y:2018,u:25,i:47.6},{y:2019,u:30,i:53.8},{y:2020,u:35,i:36.1},{y:2021,u:47.8,i:50.9},
+  {y:2022,u:105,i:94.8},{y:2023,u:260,i:211.4},{y:2024,u:145,i:118},{y:2025,u:22,i:30},
+];
+let _pa=1;
+const PA_SERIES=PA_HIST.map(d=>{_pa*=d.u/d.i;return{y:d.y,pa:+_pa.toFixed(4),ratio:+(d.u/d.i).toFixed(3)};});
+const PA_NOW=PA_SERIES[PA_SERIES.length-1].pa;
+
+const BW=[0.00088,0.004392,0.009064,0.014376,0.020027,0.025802,0.031532,0.037078,0.042317,0.047143,0.051459,0.055178,0.058217,0.060501,0.061958,0.062522,0.06213,0.060719,0.058233,0.054615,0.049813,0.043774,0.036449,0.02779,0.01775,0.006282,...Array(22).fill(0)];
+const DW=[0,0,0,0.000928,0.004632,0.00956,0.015162,0.021121,0.027212,0.033256,0.039104,0.04463,0.04972,0.054272,0.058193,0.061398,0.063807,0.065344,0.06594,0.065525,0.064038,0.061415,0.0576,0.052535,0.046167,0.038442,...Array(22).fill(0)];
+const SW=[0.000526,0.002644,0.005502,0.008806,0.012387,0.016129,0.01994,0.023745,0.02748,0.031087,0.034518,0.037724,0.040665,0.0433,0.045594,0.047512,0.04902,0.050089,0.050688,0.05079,0.050367,0.049393,0.047843,0.045692,0.042917,0.039495,0.035404,0.030622,0.025128,0.018901,0.011922,0.004171,...Array(16).fill(0)];
+const CREA_W=[0,0.003337,0.003338,0.010125,0.022245,0.032448,0.054826,0.053887,0.063224,0.072562,0.065784,0.05922,0.039355,0.042731,0.059176,0.045497,0.063061,0.067044,0.057904,0.060094,0.039451,0.025694,0.022456,0.014451,0.008025,0.014066,...Array(22).fill(0)];
+const AVW=[BW,DW,SW,CREA_W];
+const AV_NAMES=['Estándar','Atraso +3m','Lenta ×1.25','Referencia Creaurbana'];
+
+const ACORDADOS={
+  '2023':{hasAcuerdo:false,tramos:[
+    {mes:6,pct:0.109,lbl:'Jun +10.9%'},{mes:7,pct:0.10,lbl:'Jul +10%'},
+    {mes:8,pct:0.09,lbl:'Ago +9%'},{mes:9,pct:0.08,lbl:'Sep +8%'},
+    {mes:10,pct:0.119,lbl:'Oct +11.9%'},{mes:11,pct:0.11,lbl:'Nov +11%'},{mes:12,pct:0.11,lbl:'Dic +11%'},
+  ],lbl:'Sin acuerdo formal 2023',nota:'Los ajustes de 2023 fueron discrecionales y mensuales (+109% acumulado Abr→Dic). Se muestran como referencia histórica.'},
+  '2024':{hasAcuerdo:true,tramos:[
+    {mes:1,pct:0.125,lbl:'Ene +12.5%'},{mes:4,pct:0.10,lbl:'Abr +10%'},{mes:7,pct:0.08,lbl:'Jul +8%'},{mes:10,pct:0.07,lbl:'Oct +7%'},
+  ],lbl:'Paritaria 2024 homologada',nota:'Acuerdo Feb-2024: 4 tramos, ≈40% acumulado. Activar si los tramos aún no fueron aplicados al salario al momento de la firma.'},
+  '2025':{hasAcuerdo:true,tramos:[
+    {mes:1,pct:0.05,lbl:'Ene +5%'},{mes:3,pct:0.04,lbl:'Mar +4%'},{mes:5,pct:0.04,lbl:'May +4%'},
+    {mes:7,pct:0.04,lbl:'Jul +4%'},{mes:9,pct:0.035,lbl:'Sep +3.5%'},{mes:11,pct:0.035,lbl:'Nov +3.5%'},
+  ],lbl:'Paritaria 2025 bimestral',nota:'Acuerdo Ene-2025: 6 tramos bimestrales, ≈25% acumulado.'},
+};
+
+const CONTEXTO={
+  2023:{contension:'Muy baja',ciclo:false,devaluacion:true,tendencia:'agr',
+        texto:'Transición Milei — devaluación abrupta dic-23, gobierno saliente sin capacidad de contención. Alta presión gremial por atraso acumulado.'},
+  2024:{contension:'Media',ciclo:false,devaluacion:false,tendencia:'norm',
+        texto:'Milei — ajuste fiscal agresivo, crawling peg controlado. Sin elecciones nacionales.'},
+  2025:{contension:'Baja',ciclo:true,devaluacion:false,tendencia:'agr',
+        texto:'Milei — elecciones legislativas oct-25. Años electorales generan históricamente concesiones salariales.'},
+  2026:{contension:'Desconocida',ciclo:false,devaluacion:false,tendencia:'norm',
+        texto:'Escenario post-electoral incierto. Proyección conservadora.'},
+};
+
+// ════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════
+const ST={
+  anno:2024,firma:12,
+  mult1:'opt',tc1:'rem',fu1:'agr',tr1:4,
+  mult2:'opt',tc2:'rem',fu2:'agr',tr2:4,
+  av:0,
+  acordado:false,acordadoMeses:[],acordadoPcts:[],
+};
+const slots=[null,null,null];
+const charts={};
+
+// ════════════════════════════════════════════════════════════
+// CORE HELPERS
+// ════════════════════════════════════════════════════════════
+function getREM(){return REM[ST.anno+'-'+ST.firma]||REM['2024-12'];}
+
+function getParam(yr){
+  const r=getREM();
+  const mult=yr===1?ST.mult1:ST.mult2;
+  const tc_key=yr===1?ST.tc1:ST.tc2;
+  const fu_key=yr===1?ST.fu1:ST.fu2;
+  const ipc=yr===1?r.ipc1:r.ipc2;
+  const ftc=yr===1?r.ftc1:r.ftc2;
+  const tc_val=TC_MAP[tc_key]!==null&&TC_MAP[tc_key]!==undefined?TC_MAP[tc_key]:ftc;
+  const fu_val=FU_MAP[fu_key];
+  const ipc_eff=ipc*(MULT[mult]||1);
+  return{ipc:ipc_eff,tc:tc_val,fu:fu_val,ca:ipc_eff*(0.45*tc_val+0.55*fu_val),ua:ipc_eff*fu_val};
+}
+
+function getInp(){
+  const n=(id,def)=>{const el=document.getElementById(id);if(!el)return def;const v=parseFloat(el.value);return isNaN(v)||v<=0?def:v;};
+  const dur=n('inp-dur',26);
+  return{monto:n('inp-monto',870000000),cac_base:n('inp-cac',9049.8),uocra_base:n('inp-uocra',1602),duracion:dur>=6&&dur<=48?dur:26};
+}
+
+function calFactors(trN,ua,yr1){
+  if(yr1&&ST.acordado&&ST.acordadoMeses.length>0){
+    const cf=[1,1,1,1,1,1,1,1,1,1,1,1];
+    let acc=1,ti=0;
+    const tr=ST.acordadoMeses.map((m,i)=>({mes:m,pct:ST.acordadoPcts[i]||0}));
+    for(let m=1;m<=12;m++){while(ti<tr.length&&tr[ti].mes<=m){acc*=(1+tr[ti].pct);ti++;}cf[m-1]=acc;}
+    return cf;
+  }
+  const p=PARI[trN]||PARI[4];
+  const ws=p.weights.reduce((a,b)=>a+b,0);
+  const wn=p.weights.map(w=>w/ws);
+  const cum=[];let acc=0;
+  wn.forEach(w=>{acc+=w;cum.push(acc);});
+  const cf=Array(12).fill(1);let ti=0;
+  for(let m=1;m<=12;m++){
+    if(ti<p.months.length&&m===p.months[ti])ti++;
+    cf[m-1]=ti>0?Math.pow(1+ua,cum[ti-1]):1;
+  }
+  return cf;
+}
+
+// ════════════════════════════════════════════════════════════
+// CALCULATION ENGINE
+// ════════════════════════════════════════════════════════════
+function calcFull(inp,ov){
+  const o=ov||{};
+  const{monto,cac_base:c0,uocra_base:u0,duracion:dur}=inp;
+  const p1=o.p1||getParam(1),p2=o.p2||getParam(2);
+  const tr1=o.tr1!==undefined?o.tr1:ST.tr1;
+  const tr2=o.tr2!==undefined?o.tr2:ST.tr2;
+  const avIdx=o.av!==undefined?o.av:ST.av;
+  const firma=o.firma!==undefined?o.firma:ST.firma;
+  const{ca:ca1,ua:ua1}=p1,{ca:ca2,ua:ua2}=p2;
+  const cf1=calFactors(tr1,ua1,true),cf2=calFactors(tr2,ua2,false);
+  const av=AVW[avIdx];
+  const eff=avIdx===1?dur+3:avIdx===2?dur+Math.round(dur*0.25):dur;
+  const av_slice=av.slice(0,eff);
+  const av_sum=av_slice.reduce((a,b)=>a+b,0);
+  const av_n=av_sum>0?av_slice.map(w=>w/av_sum):av_slice;
+  const uocra_eoy1=cf1[11],cac_eoy1=Math.pow(1+ca1,1);
+  let runM=0,meses=0;
+  const cumM=[],cacG=[],uocG=[],monthly=[];
+  for(let i=0;i<eff;i++){
+    const m=i+1,calM=(firma-1+i)%12;
+    let cg,ug;
+    if(m<=12){cg=Math.pow(1+ca1,m/12);ug=cf1[calM];}
+    else{cg=cac_eoy1*Math.pow(1+ca2,(m-12)/12);ug=uocra_eoy1*cf2[calM];}
+    if(av_n[i]>0){
+      const avM=monto*av_n[i],yM=avM*(cg-1),zM=avM*(ug-1),margin=yM-zM;
+      runM+=margin;if(ug>cg)meses++;
+      monthly.push({m,calM,cg,ug,avM,yM,zM,margin,cum:runM});
+    }
+    cumM.push(runM);cacG.push(+(cg*100).toFixed(2));uocG.push(+(ug*100).toFixed(2));
+  }
+  const re_cac=cac_eoy1*Math.pow(1+ca2,Math.max(eff-12,0)/12);
+  const re_uocra=uocra_eoy1*Math.pow(1+ua2,Math.max(eff-12,0)/12);
+  const ratioEnd=(c0/u0)*(re_cac/re_uocra);
+  return{loss:-runM,ratioEnd,delta:ratioEnd-(c0/u0),meses,eff,ca1,ua1,ca2,ua2,cumM,cacG,uocG,monthly};
+}
+
+// ════════════════════════════════════════════════════════════
+// FORMATTERS
+// ════════════════════════════════════════════════════════════
+const fARS=v=>{
+  if(v===null||v===undefined||isNaN(v))return'—';
+  const a=Math.abs(v);
+  const s=a>=1e9?(a/1e9).toFixed(1)+'B':(a/1e6).toFixed(1)+'M';
+  return(v<0?'+':v>0?'−':'')+'$'+s;
+};
+const fPct=v=>(v*100).toFixed(1)+'%';
+const fX=v=>v.toFixed(2)+'×';
+const cc=(v,t)=>{
+  if(t==='loss')return v<-5e6?'pos':v>20e6?'neg':'ale';
+  if(t==='ratio')return v>5?'pos':v>3?'ale':'neg';
+  if(t==='meses')return v<5?'pos':v<15?'ale':'neg';
+  return'';
+};
+
+function mkChart(id,type,data,opts){
+  if(charts[id]){try{charts[id].destroy();}catch(e){}delete charts[id];}
+  const el=document.getElementById(id);if(!el)return;
+  charts[id]=new Chart(el,{type,data,options:{
+    responsive:true,maintainAspectRatio:false,animation:{duration:300},
+    plugins:{legend:{display:data.datasets.length>1,labels:{font:{size:9,family:'DM Mono'},boxWidth:10,padding:8}}},
+    scales:{x:{ticks:{font:{size:8},maxTicksLimit:12},grid:{color:'rgba(0,0,0,.04)'}},
+            y:{ticks:{font:{size:8}},grid:{color:'rgba(0,0,0,.04)'}}},
+    ...opts
+  }});
+}
+
+// ════════════════════════════════════════════════════════════
+// PANEL SWITCH
+// ════════════════════════════════════════════════════════════
+function goPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelector('[data-panel="'+id+'"]').classList.add('active');
+  setTimeout(()=>Object.values(charts).forEach(c=>{try{c.resize();}catch(e){}}),60);
+}
+
+// ════════════════════════════════════════════════════════════
+// ACORDADO / SUGERENCIA
+// ════════════════════════════════════════════════════════════
+function suggestPA(){
+  const lag=1-PA_NOW;
+  if(lag<=0.10)return{level:'Bajo',fu:'mod',cls:'pos'};
+  if(lag<=0.25)return{level:'Moderado',fu:'mod',cls:'pos'};
+  if(lag<=0.45)return{level:'Alto',fu:'norm',cls:'ale'};
+  return{level:'Severo',fu:'agr',cls:'neg'};
+}
+
+function renderAcordado(){
+  const wrap=document.getElementById('acord-wrap');if(!wrap)return;
+  const ac=ACORDADOS[String(ST.anno)];
+  const pa=suggestPA();
+  const ctx=CONTEXTO[ST.anno]||CONTEXTO[2026];
+  let score=pa.level==='Severo'?2:pa.level==='Alto'?1:0;
+  if(ctx.ciclo)score=Math.min(2,score+1);
+  if(ctx.contension==='Muy baja'||ctx.contension==='Baja')score=Math.min(2,score+0.5);
+  const rec_fu=score>=1.5?'agr':score>=0.5?'norm':'mod';
+  const rec_av=ctx.devaluacion?1:0;
+  const rec_tr=rec_fu==='agr'?4:rec_fu==='norm'?3:2;
+  const AV_S=['Estándar','Atraso +3m','Lenta','Referencia'];
+  let html='';
+  if(ac&&ac.hasAcuerdo){
+    const active=ST.acordado;
+    html=`<div class="acord-card has-acuerdo">
+      <div class="acord-head has-acuerdo">
+        <span>⚠</span><span class="acord-title has-acuerdo">${ac.lbl}</span>
+        <span class="ch-s">${ST.anno}</span>
+      </div>
+      <div class="acord-body">
+        <div class="acord-nota">${ac.nota}</div>
+        <div class="acord-chips">${ac.tramos.map(t=>`<span class="acord-chip">${t.lbl}</span>`).join('')}</div>
+        <div class="acord-btns">
+          <button class="acord-btn primary ${active?'on':''}" onclick="setAcordado(true)">Activar paritaria acordada</button>
+          <button class="acord-btn secondary" onclick="setAcordado(false)">Usar tramos proyectados</button>
+          <span class="acord-status" id="acord-status">${active?'✅ Activa':'—'}</span>
+        </div>
+      </div>
+    </div>`;
+  } else {
+    const pa_pct=((1-PA_NOW)*100).toFixed(1);
+    html=`<div class="acord-card sin-acuerdo">
+      <div class="acord-head sin-acuerdo">
+        <span>💡</span><span class="acord-title sin-acuerdo">Sin acuerdo formal · Sugerencia para ${ST.anno}</span>
+      </div>
+      <div class="acord-body">
+        <div class="sug-box">
+          <div class="sug-row">
+            <span class="sug-lbl">Sugerido</span>
+            <span class="sug-val ${rec_fu==='agr'?'neg':rec_fu==='norm'?'ale':'pos'}">${FU_LBL[rec_fu]} (×${FU_MAP[rec_fu]})</span>
+            <span class="sug-lbl" style="margin-left:8px">${rec_tr} tramos · Curva ${AV_S[rec_av]}</span>
+          </div>
+          <div class="sug-chips">
+            <span class="sug-chip">PA=${PA_NOW.toFixed(3)} (−${pa_pct}%)</span>
+            <span class="sug-chip">Nivel ${pa.level}</span>
+            <span class="sug-chip">${ctx.contension}</span>
+            ${ctx.ciclo?'<span class="sug-chip ale">Año electoral</span>':''}
+          </div>
+          <button class="apply-btn" onclick="applysuggestion('${rec_fu}',${rec_tr},${rec_av})">↳ Aplicar al modelo</button>
+          <span class="apply-status" id="apply-status"></span>
+        </div>
+        <div class="acord-nota">${ctx.texto}</div>
+        <div class="razon">
+          <div class="razon-head" onclick="toggleRazon(this)">
+            <span class="razon-icon">💱</span>
+            <span class="razon-titulo">¿Qué régimen cambiario usar?</span>
+            <span class="razon-arr">▾</span>
+          </div>
+          <div class="razon-body">
+            <strong>REM (TC&lt;IPC)</strong>: el tipo de cambio crece menos que la inflación → materiales se abaratan en términos reales → CAC crece menos que IPC puro. Es el crawling peg típico de 2024-2025 (ftc ≈ 0.60–0.70×).<br><br>
+            <strong>Neutro (TC=IPC)</strong>: el TC sigue exactamente a la inflación → sin efecto real sobre materiales. Caso base neutral.<br><br>
+            <strong>Devaluación (TC&gt;IPC)</strong>: materiales suben por encima del IPC → CAC crece más. Para 2023, el REM ya incorpora ftc=1.74× (devaluación Milei). No combinar REM 2023 con TC=Devaluación.
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+  wrap.innerHTML=html;
+}
+
+function toggleRazon(head){
+  const body=head.nextElementSibling,arr=head.querySelector('.razon-arr');
+  if(body.style.display==='block'){body.style.display='none';arr.classList.remove('open');}
+  else{body.style.display='block';arr.classList.add('open');}
+}
+
+function setAcordado(active){
+  const ac=ACORDADOS[String(ST.anno)];
+  ST.acordado=active;
+  if(active&&ac){ST.acordadoMeses=ac.tramos.map(t=>t.mes);ST.acordadoPcts=ac.tramos.map(t=>t.pct);}
+  else{ST.acordadoMeses=[];ST.acordadoPcts=[];}
+  render();
+}
+
+function applysuggestion(fu,tr,av){
+  ST.fu1=fu;ST.tr1=tr;ST.av=av;ST.acordado=false;
+  setActive('fu1-btns',fu);setActive('tr1-btns',tr);
+  document.querySelectorAll('.avb').forEach(b=>b.classList.toggle('on',+b.dataset.av===av));
+  const el=document.getElementById('apply-status');if(el)el.textContent='✅ Aplicado';
+  render();
+}
+
+// ════════════════════════════════════════════════════════════
+// RENDER FUNCTIONS
+// ════════════════════════════════════════════════════════════
+function renderTimbar(){
+  const bar=document.getElementById('timbar');if(!bar)return;
+  const p=PARI[ST.tr1]||PARI[4];
+  bar.innerHTML=Array.from({length:12},(_,i)=>{
+    const m=i+1,cls=m===ST.firma?'tc firma':p.months.includes(m)?'tc pari':'tc';
+    return`<div class="${cls}">${m===ST.firma?MN[i]+'★':p.months.includes(m)?MN[i]+'↑':MN[i]}</div>`;
+  }).join('');
+}
+
+function renderContrato(){
+  const rem=getREM();
+  const rb=document.getElementById('rem-badge');if(rb)rb.textContent=rem.lbl+' · '+ST.anno;
+  const tf=document.getElementById('top-firma');if(tf)tf.textContent=MN[ST.firma-1]+'-'+ST.anno;
+  const tr=document.getElementById('top-rem');if(tr)tr.textContent=rem.lbl;
+  const p1=getParam(1),p2=getParam(2);
+  const m1=document.getElementById('macro-yr1');
+  if(m1)m1.innerHTML=`IPC <span>${fPct(p1.ipc)}</span> · TC <span>${p1.tc.toFixed(2)}×</span> · CAC <span>${fPct(p1.ca)}</span> · UOCRA <span>${fPct(p1.ua)}</span>`;
+  const m2=document.getElementById('macro-yr2');
+  if(m2)m2.innerHTML=`IPC <span>${fPct(p2.ipc)}</span> · TC <span>${p2.tc.toFixed(2)}×</span> · CAC <span>${fPct(p2.ca)}</span> · UOCRA <span>${fPct(p2.ua)}</span>`;
+  const m1s=document.getElementById('rem-yr1');if(m1s)m1s.textContent=rem.lbl;
+  const m2s=document.getElementById('rem-yr2');if(m2s)m2s.textContent=rem.lbl;
+  renderTimbar();renderAcordado();
+  const inp=getInp(),res=calcFull(inp);
+  const tl=document.getElementById('top-loss');
+  if(tl){tl.textContent=fARS(res.loss);tl.className='badge '+(res.loss<-5e6?'hi':res.loss>20e6?'lo':'');}
+  const si=document.getElementById('sb-impact');
+  if(si){si.textContent=fARS(res.loss);si.className='sb-impact-val '+(res.loss<0?'pos':res.loss>0?'neg':'');}
+  const sil=document.getElementById('sb-impact-lbl');
+  if(sil)sil.textContent=res.loss<0?'Ganancia estimada':res.loss>0?'Pérdida estimada':'Neutro';
+  const sm=document.getElementById('sb-monto');if(sm)sm.textContent='$'+Math.round(inp.monto/1e6)+'M';
+  const sd=document.getElementById('sb-dur');if(sd)sd.textContent=inp.duracion+'m / ef.'+res.eff+'m';
+  const sr=document.getElementById('sb-ratio');if(sr){sr.textContent=fX(res.ratioEnd);sr.className='sb-v '+cc(res.ratioEnd,'ratio');}
+  const sme=document.getElementById('sb-meses');if(sme){sme.textContent=res.meses+'m';sme.className='sb-v '+cc(res.meses,'meses');}
+  const spa=document.getElementById('sb-pa');if(spa)spa.textContent=PA_NOW.toFixed(3)+' (−'+((1-PA_NOW)*100).toFixed(0)+'%)';
+}
+
+function renderAnalisis(){
+  const inp=getInp(),res=calcFull(inp);
+  const al=document.getElementById('a-loss');if(al){al.textContent=fARS(res.loss);al.className='mc-val '+cc(res.loss,'loss');}
+  const als=document.getElementById('a-loss-s');if(als)als.textContent=res.loss<0?'✅ Ganancia estimada':res.loss>0?'⚠ Pérdida estimada':'Neutro';
+  const ar=document.getElementById('a-ratio');if(ar){ar.textContent=fX(res.ratioEnd);ar.className='mc-val '+cc(res.ratioEnd,'ratio');}
+  const ars=document.getElementById('a-ratio-s');if(ars)ars.textContent='Δ '+(res.delta>=0?'+':'')+res.delta.toFixed(2)+'× vs inicio';
+  const am=document.getElementById('a-meses');if(am){am.textContent=res.meses+'m';am.className='mc-val '+cc(res.meses,'meses');}
+  const ac=document.getElementById('a-cac');if(ac)ac.textContent=fPct(res.ca1)+' / '+fPct(res.ca2);
+  const au=document.getElementById('a-uocra');if(au)au.textContent='UOCRA: '+fPct(res.ua1)+' / '+fPct(res.ua2);
+  const call=document.getElementById('a-callout');
+  if(call){
+    if(res.loss>100e6)call.innerHTML=`<div class="callout neg"><strong>Alerta:</strong> La pérdida proyectada supera los $100M. Se recomienda revisar las cláusulas de ajuste antes de firmar.</div>`;
+    else if(res.loss>20e6)call.innerHTML=`<div class="callout ale"><strong>Atención:</strong> Pérdida proyectada de ${fARS(res.loss)}. Evaluar cobertura contractual.</div>`;
+    else if(res.loss<-20e6)call.innerHTML=`<div class="callout pos"><strong>Posición favorable:</strong> El diferencial CAC/UOCRA genera una ganancia proyectada de ${fARS(res.loss)}.</div>`;
+    else call.innerHTML='';
+  }
+  mkChart('chart-evol','line',{labels:Array.from({length:res.cacG.length},(_,i)=>'M'+(i+1)),datasets:[
+    {label:'CAC GRL (base 100)',data:res.cacG,borderColor:'#5C7A54',backgroundColor:'rgba(92,122,84,.05)',borderWidth:2,pointRadius:0,tension:.4},
+    {label:'UOCRA (base 100)',data:res.uocG,borderColor:'#8C3A22',backgroundColor:'rgba(140,58,34,.05)',borderWidth:2,pointRadius:0,tension:.4},
+  ]});
+  mkChart('chart-margin','bar',{labels:Array.from({length:res.cumM.length},(_,i)=>'M'+(i+1)),datasets:[
+    {label:'Margen acumulado',data:res.cumM.map(v=>+(v/1e6).toFixed(1)),
+     backgroundColor:res.cumM.map(v=>v>=0?'rgba(92,122,84,.65)':'rgba(140,58,34,.65)'),borderWidth:0},
+  ]},{scales:{y:{ticks:{callback:v=>'$'+v+'M',font:{size:8}}}}});
+  const tbody=document.querySelector('#a-table tbody');
+  if(tbody)tbody.innerHTML=res.monthly.map(row=>{
+    const cls=row.margin<0?'neg':row.margin>0?'pos':'';
+    return`<tr><td class="mono">${row.m}</td><td>${MN[row.calM]}</td><td class="mono">${row.cg.toFixed(3)}×</td><td class="mono">${row.ug.toFixed(3)}×</td><td class="mono">$${(row.avM/1e6).toFixed(1)}M</td><td class="mono pos">$${(row.yM/1e6).toFixed(1)}M</td><td class="mono neg">$${(row.zM/1e6).toFixed(1)}M</td><td class="mono ${cls}">$${(row.margin/1e6).toFixed(1)}M</td><td class="mono ${row.cum<0?'neg':'pos'}">$${(row.cum/1e6).toFixed(1)}M</td></tr>`;
+  }).join('');
+}
+
+function saveSlot(i){
+  const inp=getInp(),res=calcFull(inp);
+  slots[i]={lbl:['A','B','C'][i],name:`${MN[ST.firma-1]}-${ST.anno} · ${AV_NAMES[ST.av]} · FU:${FU_LBL[ST.fu1]}/${FU_LBL[ST.fu2]}`,res,inp,av:ST.av,fu1:ST.fu1,fu2:ST.fu2};
+  renderComparacion();
+}
+function clearSlot(i){slots[i]=null;renderComparacion();}
+
+function renderComparacion(){
+  const su=document.getElementById('slots-ui');
+  if(su)su.innerHTML=['A','B','C'].map((l,i)=>{
+    const s=slots[i];
+    if(!s)return`<div class="slot"><div class="slot-lbl">Hipótesis ${l}</div><div class="slot-empty">Guardá desde Contrato →</div></div>`;
+    const cls=s.res.loss<0?'pos':s.res.loss>0?'neg':'';
+    return`<div class="slot filled"><button class="slot-x" onclick="clearSlot(${i})">×</button><div class="slot-lbl">Hip. ${l}</div><div class="slot-loss ${cls}">${fARS(s.res.loss)}</div><div class="slot-meta">${s.name}</div></div>`;
+  }).join('');
+  const filled=slots.filter(Boolean);if(!filled.length)return;
+  const colors=['#5C7A54','#8C6020','#8C3A22'];
+  mkChart('cmp-bar','bar',{labels:filled.map(s=>'Hip. '+s.lbl),datasets:[{label:'Impacto (M)',data:filled.map(s=>+(s.res.loss/1e6).toFixed(1)),backgroundColor:filled.map(s=>s.res.loss<0?'rgba(92,122,84,.7)':'rgba(140,58,34,.7)'),borderWidth:0}]},{scales:{y:{ticks:{callback:v=>'$'+v+'M',font:{size:8}}}}});
+  mkChart('cmp-lines','line',{labels:Array.from({length:Math.max(...filled.map(s=>s.res.cumM.length))},(_,i)=>'M'+(i+1)),datasets:filled.map((s,i)=>({label:'Hip. '+s.lbl,data:s.res.cumM.map(v=>+(v/1e6).toFixed(1)),borderColor:colors[i],backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:.3}))},{scales:{y:{ticks:{callback:v=>'$'+v+'M',font:{size:8}}}}});
+  const ct=document.querySelector('#cmp-table tbody');
+  if(ct)ct.innerHTML=filled.map(s=>{const cls=s.res.loss<0?'pos':s.res.loss>0?'neg':'';return`<tr><td><strong>Hip. ${s.lbl}</strong></td><td class="mono">${AV_NAMES[s.av]}</td><td class="mono">${FU_LBL[s.fu1]}</td><td class="mono">${FU_LBL[s.fu2]}</td><td class="mono">${fPct(s.res.ca1)}</td><td class="mono">${fPct(s.res.ua1)}</td><td class="mono ${cls}">${fARS(s.res.loss)}</td><td class="mono">${fX(s.res.ratioEnd)}</td><td class="mono">${s.res.meses}m</td></tr>`;}).join('');
+}
+
+function renderSupuestos(){
+  mkChart('chart-hist','bar',{labels:PA_HIST.map(d=>d.y),datasets:[
+    {label:'UOCRA %',data:PA_HIST.map(d=>d.u),backgroundColor:'rgba(140,58,34,.25)',borderColor:'rgba(140,58,34,.8)',borderWidth:1.5},
+    {label:'IPC %',data:PA_HIST.map(d=>d.i),backgroundColor:'rgba(92,122,84,.15)',borderColor:'rgba(92,122,84,.6)',borderWidth:1.5},
+  ]},{scales:{y:{ticks:{callback:v=>v+'%',font:{size:8}}}}});
+  mkChart('chart-pa','line',{labels:PA_SERIES.map(d=>d.y),datasets:[{label:'PA acumulado',data:PA_SERIES.map(d=>d.pa),borderColor:'rgba(140,58,34,.8)',backgroundColor:'rgba(140,58,34,.08)',borderWidth:2,pointRadius:3,tension:.3,fill:true}]},{scales:{y:{min:0,max:1.3,ticks:{font:{size:8}}}}});
+  const pf=document.getElementById('pa-fill');if(pf)pf.style.width=(PA_NOW*100)+'%';
+  const pb=document.getElementById('pa-badge');if(pb)pb.textContent='PA actual: '+PA_NOW.toFixed(3)+' (−'+((1-PA_NOW)*100).toFixed(0)+'%)';
+  const plo=document.getElementById('pa-lo');if(plo)plo.textContent='0 (pérdida total)';
+  const phi=document.getElementById('pa-hi');if(phi)phi.textContent='1.0 (paridad histórica)';
+  const rt=document.querySelector('#rem-table tbody');
+  if(rt){
+    const keys=['2023-4','2023-12','2024-4','2024-12','2025-6'];
+    rt.innerHTML=keys.map(k=>{const r=REM[k];if(!r)return'';return`<tr><td class="mono">${k}</td><td>${r.lbl}</td><td class="mono">${fPct(r.ipc1)}</td><td class="mono">${r.ftc1}×</td><td class="mono">${fPct(r.ipc2)}</td><td class="mono">${r.ftc2}×</td></tr>`;}).join('');
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// MASTER RENDER
+// ════════════════════════════════════════════════════════════
+function render(){
+  try{renderContrato();}catch(e){console.error('renderContrato:',e);}
+  try{renderAnalisis();}catch(e){console.error('renderAnalisis:',e);}
+  try{renderComparacion();}catch(e){console.error('renderComparacion:',e);}
+}
+
+function setActive(gid,val){
+  document.querySelectorAll('#'+gid+' [data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===String(val)));
+}
+
+// ════════════════════════════════════════════════════════════
+// EVENT WIRING
+// ════════════════════════════════════════════════════════════
+document.querySelectorAll('#anno-btns .ab2').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#anno-btns .ab2').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');ST.anno=+b.dataset.a;ST.acordado=false;ST.acordadoMeses=[];ST.acordadoPcts=[];render();
+}));
+document.querySelectorAll('#mes-btns .mb').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#mes-btns .mb').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');ST.firma=+b.dataset.m;render();
+}));
+document.querySelectorAll('#av-btns .avb').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#av-btns .avb').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');ST.av=+b.dataset.av;render();
+}));
+[['mult1-btns','mult1'],['tc1-btns','tc1'],['fu1-btns','fu1'],
+ ['mult2-btns','mult2'],['tc2-btns','tc2'],['fu2-btns','fu2']].forEach(([gid,key])=>{
+  document.querySelectorAll('#'+gid+' .btn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('#'+gid+' .btn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');ST[key]=b.dataset.v;render();
+  }));
+});
+[['tr1-btns','tr1'],['tr2-btns','tr2']].forEach(([gid,key])=>{
+  document.querySelectorAll('#'+gid+' .trb').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('#'+gid+' .trb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');ST[key]=+b.dataset.v;render();
+  }));
+});
+['inp-monto','inp-dur','inp-cac','inp-uocra'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el){el.addEventListener('input',render);el.addEventListener('change',render);}
+});
+
+// ════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════
+try{
+  renderSupuestos();
+  render();
+  setTimeout(()=>document.getElementById('splash').classList.add('hide'),1400);
+  console.log('✅ Creaurbana App cargada');
+}catch(e){
+  console.error('❌ Error init:',e);
+  document.getElementById('splash').classList.add('hide');
+}
+</script>
+</body>
+</html>
